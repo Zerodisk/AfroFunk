@@ -25,7 +25,7 @@
 
 5. modify application/config/config.php to setup the base url
 
-    $config['base_url']	= 'http://localhost:8888/AfroFunk';
+    $config['base_url']	= 'http://localhost/AfroFunk';
 
 6. Config auto complete in Eclipse by using http://taggedzi.com/articles/display/autocomplete-eclipse-codeigniter-2
 
