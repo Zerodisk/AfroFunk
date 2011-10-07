@@ -16,22 +16,41 @@ class Shoppingcart{
 		}
 	}
 	
+	//return current order_id
 	function getOrderId(){
 		return $this->cart->getOrderId();
 	}
 	
+	/*
+	 * return cart items format of array, 
+	 *    each element is the unique item_id with its own qty
+	 */
 	function getCart(){
 		return $this->cart->getCart();
 	}
 	
+	/*
+	 * return total number of item/quantity in shopping cart
+	 */
+	function getCartNumberOfItem($cart){
+		$num_item = 0;
+		foreach($cart as $item){
+			$num_item = $num_item + $item['qty'];
+		}	
+		return $num_item;
+	}
+	
+	//empty shopping cart
 	function emptyCart(){
 		$this->cart->emptyCart();
 	}
 	
+	//remove item from cart for a given item_id
 	function removeCart($item_id){
 		$this->cart->removeCard($item_id);
 	}
-		
+	
+	//update qty on the given item_id
 	function updateCart($item_id, $qty){
 		$item = array(
 						'item_id' => $item_id, 
@@ -40,6 +59,11 @@ class Shoppingcart{
 		$this->cart->updateCart($item);
 	}
 	
+	/*
+	 * add item to shopping cart
+	 *  - for exisint item, will extend qty with new one
+	 *  - for new item, will simply add item to cart
+	 */
 	function addCart($item_id, $qty = 1){	
 		//get item details
 		$item = $this->ci->ItemModel->getItem($item_id);

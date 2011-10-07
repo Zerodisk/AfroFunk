@@ -210,7 +210,10 @@ class Test extends CI_Controller{
     
     public function shoppingcart_getcart(){
     	$this->load->library('shoppingcart');
-    	var_dump($this->shoppingcart->getCart());
+    	$cart = $this->shoppingcart->getCart();
+    	var_dump($cart);
+    	
+    	echo("\n".'number of total item in cart: '.$this->shoppingcart->getCartNumberOfItem($cart));
     }
     
     public function shoppingcartclear(){

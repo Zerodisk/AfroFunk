@@ -180,7 +180,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -370,7 +370,7 @@ $config['proxy_ips'] = '';
 |	 'db'		=> using database to store shopping cart (order_id is the key)
 |
  */
-$config['afro_cart_config'] = 'db';		
+$config['afro_cart_config'] = 'session';		
 
 
 /* End of file config.php */
