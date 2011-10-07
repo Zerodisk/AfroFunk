@@ -1,0 +1,37 @@
+1. add file .htaccess with content below (this will remove index.php from url)
+
+    RewriteEngine on  
+    RewriteCond $1 !^(index\.php|images|css|js|robots\.txt|favicon\.ico)  
+    RewriteCond %{REQUEST_FILENAME} !-f  
+    RewriteCond %{REQUEST_FILENAME} !-d  
+    RewriteRule ^(.*)$ ./index.php/$1 [L,QSA]
+
+2. modify application/config/routes.php (add these below 2 lines)
+
+    $route['product/(:num)'] = "product/view/$1";
+    $route['Product/(:num)'] = "product/view/$1";
+    // and many many
+    // and many many many
+    // and many many many many .......
+
+
+3. modify application/config/database.php to add all db connection value
+
+
+4. modify application/config/autoload.php to auto load the database class
+
+    $autoload['libraries'] = array('database');
+    $autoload['helper'] = array('url');
+
+5. modify application/config/config.php to setup the base url
+
+    $config['base_url']	= 'http://localhost:8888/AfroFunk';
+
+6. Config auto complete in Eclipse by using http://taggedzi.com/articles/display/autocomplete-eclipse-codeigniter-2
+
+7. In order to use codeigniter sessions, encryption key need to be set. edit encryption key here
+
+	$config['encryption_key'] = '!#$sTRsHgU^%UeERFeF';
+	
+8. Implement MY_Controller class with extend CI_Controller class. File is located at /application/core/MY_Controller.php
+   All admin page that need admin authentication will need to extended MY_Controller instead of CI_Controller

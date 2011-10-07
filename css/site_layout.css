@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+body {
+	margin: 0;
+	padding: 0;
+	background: #ccc;
+}
+#container {
+	width: 960px;
+	margin: 0 auto;
+}
+
+#header { 
+	padding: 30px;
+	background: #bbb;
+}
+
+#footer {
+	clear: both;
+	background: #aaa;
+	padding: 10px;
+}
