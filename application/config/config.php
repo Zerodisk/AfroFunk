@@ -370,7 +370,7 @@ $config['proxy_ips'] = '';
 |	 'db'		=> using database to store shopping cart (order_id is the key)
 |
  */
-$config['afro_cart_config'] = 'session';		
+$config['afro_cart_config'] = 'db';		
 
 
 /* End of file config.php */

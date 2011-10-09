@@ -213,7 +213,7 @@ class Test extends CI_Controller{
     	$cart = $this->shoppingcart->getCart();
     	var_dump($cart);
     	
-    	echo("\n".'number of total item in cart: '.$this->shoppingcart->getCartNumberOfItem($cart));
+    	echo("\n".'number of total item in cart: '.$this->shoppingcart->getNumberOfItem($cart));
     }
     
     public function shoppingcartclear(){

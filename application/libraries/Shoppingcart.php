@@ -32,7 +32,7 @@ class Shoppingcart{
 	/*
 	 * return total number of item/quantity in shopping cart
 	 */
-	function getCartNumberOfItem($cart){
+	function getNumberOfItem($cart){
 		$num_item = 0;
 		foreach($cart as $item){
 			$num_item = $num_item + $item['qty'];
@@ -71,6 +71,7 @@ class Shoppingcart{
 		$param = array(
 			 			'item_id'      			=> $item_id,
 						'qty'          			=> $qty,
+						'qty_available'			=> $item['qty'],
 						'price'        			=> $item['price'],
 						'price_discount_amt' 	=> $item['price_discount_amt'],
 						'color_name'   			=> $item['color_name'],
@@ -145,13 +146,19 @@ class dbCart implements IShoppingCart{
 
 	function updateCart($item){
 		if ($this->isExistingItem($item)){
-			$param = array(
-						   'qty' => $item['qty'],
-						  );
-			
-			$this->ci->OrderItemModel->updateOrderItem($param, NULL, $this->order_id, $item['item_id']);
-			
-			$this->ci->OrderModel->updateOrderPrice($this->order_id);
+			if ($item['qty'] == 0){		//remober item if qty set to 0
+				$this->removeCard($item['item_id']);
+			}
+			else {
+				$param = array(
+							   'qty' => $item['qty'],
+							  );
+				
+				$this->ci->OrderItemModel->updateOrderItem($param, NULL, $this->order_id, $item['item_id']);
+				
+				$this->ci->OrderModel->updateOrderPrice($this->order_id);				
+			}
+
 			return TRUE;
 		}
 		else{
@@ -231,13 +238,19 @@ class sessionCart implements IShoppingCart{
 
 	function updateCart($item){
 		if ($this->isExistingItem($item)){	
-			$cart = $this->getCart();
-			$index = $this->returnItemIndex($cart, $item['item_id']);
-			if ($index < 0)
-				return FALSE;  //not match item_id
+			if ($item['qty'] == 0){		//remober item if qty set to 0
+				$this->removeCard($item['item_id']);
+			}
+			else{
+				$cart = $this->getCart();
+				$index = $this->returnItemIndex($cart, $item['item_id']);
+				if ($index < 0)
+					return FALSE;  //not match item_id
+	
+				$cart[$index]['qty'] = $item['qty'];
+				$this->ci->session->set_userdata($this->order_id, $cart);				
+			}
 
-			$cart[$index]['qty'] = $item['qty'];
-			$this->ci->session->set_userdata($this->order_id, $cart);
 			return TRUE;
 		}
 		else{

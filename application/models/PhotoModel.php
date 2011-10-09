@@ -35,6 +35,20 @@ class PhotoModel extends CI_Model{
         return $data;
     }
     
+    //return image file name of default/main photo for a given product_id
+    function getDefaultPhoto($product_id){
+    	$sql = 'select filename from photo where product_id = ? and is_active = 1 and is_main = 1 limit 1';
+    	$query = $this->db->query($sql, $product_id);
+        $data = $query->row_array();
+        $query->free_result();  
+        
+        $photo = 'noimage.jpg';
+        if (isset($data['filename'])){
+        	$photo = $data['filename'];   
+        }
+        return $photo;	
+    }
+    
     //function to add photo - function return new photo object
     function addPhoto($param = null, $product_id, $file_extension = '.jpg'){
     	$photo_count = $this::countPhotoByProductId($product_id);

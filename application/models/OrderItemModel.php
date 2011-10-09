@@ -50,7 +50,7 @@ class OrderItemModel extends CI_Model{
     //return list of order_item base on a given order_id
     function getOrderItemList($order_id){
     	$sql = 'select oi.order_item_id, oi.item_id, oi.order_id, oi.price, oi.price_discount_amt, oi.price_discount_percent, oi.qty,
-				p.product_id, p.product_name, c.color_id, c.color_name, s.size_id, s.size_name
+				i.qty as qty_available, p.product_id, p.product_name, c.color_id, c.color_name, s.size_id, s.size_name
 				from order_item oi inner join item i on oi.item_id = i.item_id
 				inner join product p on p.product_id = i.product_id
 				left join color c on c.color_id = i.color_id
@@ -64,7 +64,7 @@ class OrderItemModel extends CI_Model{
     //return a order item for a given order_item_id or (order_id and item_id)
     function getOrderItem($order_item_id = NULL, $order_id = NULL, $item_id = NULL){
     	$sql = 'select oi.order_item_id, oi.item_id, oi.order_id, oi.price, oi.price_discount_amt, oi.price_discount_percent, oi.qty,
-				p.product_id, p.product_name, c.color_id, c.color_name, s.size_id, s.size_name
+				i.qty as qty_available, p.product_id, p.product_name, c.color_id, c.color_name, s.size_id, s.size_name
 				from order_item oi inner join item i on oi.item_id = i.item_id
 				inner join product p on p.product_id = i.product_id
 				left join color c on c.color_id = i.color_id

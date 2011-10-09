@@ -42,7 +42,6 @@
 
 
 <h1>CategoryID: <?= $category_id ?> is <?= $category_name ?></h1>
-
 <div style="margin: 0 auto; width:870px;">
 	<? foreach($products as $product){ ?>
 	<div style="border-style: dotted; border-width:1px; float:left; width: 200px; padding: 5px; margin-right: 5px; margin-bottom: 5px;">
@@ -54,7 +53,7 @@
 	    
 	    <div style="margin-bottom:10px;">Name: <?=$product['product_name']; ?></div>
 	   
-	    <div>$<?= $product['price'] - $product['price_discount'] ?></div>
+	    <div>$<?= $product['price_sell'] ?></div>
 	    
 	    <div>filename: <?=$product['photo_filename'] ?></div>
 	</div>

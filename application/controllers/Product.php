@@ -59,7 +59,11 @@ class Product extends CI_Controller{
         $this->load->view('template', $data);
 	}
 
-	
+	//redirect to default given product_id photo
+	public function Photo($product_id){
+		$filename = $this->PhotoModel->getDefaultPhoto($product_id);
+		redirect(base_url().'images/products/'.$filename);
+	}
 	
 	
 	/***********************************

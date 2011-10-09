@@ -21,5 +21,7 @@
 	    	<?=$item['size_name'].'   -   '.$item['color_name'] ?>
 	    </p>
 	<?} ?>
+	
+	<input type="submit" name="btnAddCart" value="add cart" />
 </form>
 

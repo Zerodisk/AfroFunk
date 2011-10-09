@@ -58,6 +58,7 @@ class OrderModel extends CI_Model{
     function addCartToOrder($order_id, $cart){
     	//empty existing order item before add new
     	
+    	
     	//start adding
     	
     }
@@ -67,7 +68,24 @@ class OrderModel extends CI_Model{
     	$this->OrderItemModel->emptyOrderItem($order_id);
     }
     
-    
+    /*
+     * add shipping item to the given order by a country_id
+     * step are 1. get shipping cose from shipping model
+     * 		    2. add into order_item
+     * 			3. update total order price
+     */
+    function addShipping($order_id, $country_id){
+    	//get shipping cost
+    	$this->load->model('ShippingModel');
+    	$shipping = $this->ShippingModel->getShippingCostByCountry($country_id);
+    	//add to order item
+    	$param = array(
+    	               'price' => $shipping['price'],
+    	              );
+    	$this->OrderItemModel->addOrderItem($shipping['item_id'], $order_id, $param);
+    	//update total order price again
+    	$this->updateOrderPrice($order_id);
+    }
     
     
 }
