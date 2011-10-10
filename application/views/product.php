@@ -22,6 +22,7 @@
 	    </p>
 	<?} ?>
 	
+	<input type="hidden" name="cmdCart" value="addCart" />
 	<input type="submit" name="btnAddCart" value="add cart" />
 </form>
 

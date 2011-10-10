@@ -16,22 +16,28 @@ class Cart extends CI_Controller{
     }
     
     public function index(){
-    	//add item to cart
-    	if ($this->input->post('btnAddCart')){
-    		$item_id = $this->input->post('item_id');
-    		if ($item_id > 0){
-    			$this->shoppingcart->addCart($item_id);
+    	//check if there is any commande request
+    	if ($this->input->post('cmdCart')){
+    		switch ($this->input->post('cmdCart')){
+    			case 'addCart':
+    				$item_id = $this->input->post('item_id');
+    				if ($item_id > 0){
+    					$this->shoppingcart->addCart($item_id);
+    				}
+    				break;
+    			case 'updateCart':
+    				
+    				
+    				
+    				
+    				break;
+    			case 'removeCartItem':
+    				$item_id = $this->input->post('item_id');
+    				if ($item_id > 0){
+    					$this->shoppingcart->removeCart($item_id);
+    				}
+    				break;
     		}
-    	}
-    	
-    	//click on update cart button
-    	if ($this->input->post('btnUpdateCart')){
-    	
-    	}
-    	
-    	//click on remove item from cart
-    	if ($this->input->post('btnRemoveItem')){
-    		
     	}
     	
     	//get cart
