@@ -1,4 +1,4 @@
-<title>AfroFunk - Online shop</title>
+<title><?=$title ?></title>
 
 <!-- load global use javascript -->
 <script type="text/javascript" src="<?=base_url()?>js/jquery-1.6.1.min.js"></script>

@@ -2,6 +2,7 @@
 function addCart(){
 	if (document.frmProduct.item_id.selectedIndex == 0){
 		alert('Oppp! please select size-color you want');
+		document.frmProduct.item_id.focus();
 		return;
 	}
 	document.frmProduct.cmdCart.value = 'addCart';

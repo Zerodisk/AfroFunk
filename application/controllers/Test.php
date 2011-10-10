@@ -193,7 +193,7 @@ class Test extends CI_Controller{
     }
     
     public function shoppingcart(){
-    	$this->load->library('shoppingcart');
+    	$this->load->library('shoppingcart', array('db'));
     	echo('load shopping cart work!!<br>');
     	echo($this->shoppingcart->getOrderId());
     }

@@ -12,6 +12,8 @@ function updateCart(){
 </script>
 
 <h1>your shopping cart</h1>
+<!-- order_id = <?=$order_id ?> -->
+
 <form name="frmCart" action="<?= base_url().'cart' ?>" method="post">
 	<table>
 		<tr>
@@ -40,6 +42,9 @@ function updateCart(){
 		<?}?>
 	</table>
 	
+	<div>total price: $<?=$cart_total_price ?></div>
+	
+	<input type="hidden" name="order_id" value="<?=$order_id ?>" />
 	<input type="hidden" name="cmdCart" value="" />
 	<input type="hidden" name="item_id" value="" />
 	<input type="button" name="btnUpdateCart" value="update cart" onclick="updateCart()" />

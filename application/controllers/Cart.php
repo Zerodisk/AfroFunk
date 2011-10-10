@@ -46,8 +46,10 @@ class Cart extends CI_Controller{
     	
     	//load all neccesary main data
         $data['main'] = array(
-        					'cart' 		=> $this->customizeCart($cart),			//cart and all items
-        					'num_item'  => $num_item,		//number of item in cart
+        					'order_id'	  	   => $this->shoppingcart->getOrderId(),			//order_id for this cart
+        					'cart' 		       => $this->customizeCart($cart),					//cart and all items
+        					'cart_num_item'    => $num_item,									//number of item in cart
+        					'cart_total_price' => $this->shoppingcart->getTotalPrice($cart),	//total price for this cart
         				);
         
         //load page name
@@ -162,6 +164,8 @@ class Cart extends CI_Controller{
     }
     
     private function _getTitle(){
-        return null;
+        return array(
+        			'title' => 'AfroFunk - Cart',
+        			);
     }  
 }

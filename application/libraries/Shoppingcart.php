@@ -1,17 +1,41 @@
 <?php
+
+/*
+ * shopping cart constructer.
+ * without input parameter, it will use config setting for db or sessions shopping cart
+ * but it's also possible to overwrite.
+ * cart config can be 2 values below
+ *   - db      => store all shopping cart in db
+ *   - session => store all shopping cart in codeigniter sessions variable
+ * how to load this library with input cart_config
+ *   - for db use       $this->load->library('shoppingcart', array('db'));              
+ *   - for session use  $this->load->library('shoppingcart', array('session')); 
+ *   
+ * ++++ note: the order_id once created will be store on codeigniter sessions variable for both db and session ++++
+ */
+
 class Shoppingcart{
 	var $ci;
 	var $cart;
-	
-	function Shoppingcart(){
+
+	function __construct($cart_config = NULL){
 		$this->ci =& get_instance();
-		$this->ci->load->model('ItemModel');
 		
-		if ($this->ci->config->item('afro_cart_config') == 'session'){
+		//check if there is input value
+		if ($cart_config == NULL){
+			$cart_config = $this->ci->config->item('afro_cart_config');
+		}
+		else{
+			$cart_config = $cart_config[0];
+		}
+		
+		//use sessions shopping cart
+		if ($cart_config == 'session'){
 			$this->cart = new sessionCart();
 		}
 		
-		if ($this->ci->config->item('afro_cart_config') == 'db'){
+		//use db shopping cart
+		if ($cart_config == 'db'){
 			$this->cart = new dbCart();
 		}
 	}
@@ -27,17 +51,6 @@ class Shoppingcart{
 	 */
 	function getCart(){
 		return $this->cart->getCart();
-	}
-	
-	/*
-	 * return total number of item/quantity in shopping cart
-	 */
-	function getNumberOfItem($cart){
-		$num_item = 0;
-		foreach($cart as $item){
-			$num_item = $num_item + $item['qty'];
-		}	
-		return $num_item;
 	}
 	
 	//empty shopping cart
@@ -65,6 +78,7 @@ class Shoppingcart{
 	 *  - for new item, will simply add item to cart
 	 */
 	function addCart($item_id, $qty = 1){	
+		$this->ci->load->model('ItemModel');
 		//get item details
 		$item = $this->ci->ItemModel->getItem($item_id);
 		//pre-populate all neccessary value for item
@@ -82,6 +96,31 @@ class Shoppingcart{
 			
 		//add item to cart
 		$this->cart->addCart($param);
+	}
+	
+	/*
+	 * return total number of item/quantity in shopping cart
+	 * input: current shopping cart (optional)
+	 *        if nothing passed, will retreive shopping cart from db/sessions
+	 */
+	function getNumberOfItem($cart = NULL){
+		if ($cart == NULL){$cart = $this->getCart();}
+		
+		$num_item = 0;
+		foreach($cart as $item){
+			$num_item = $num_item + $item['qty'];
+		}	
+		return $num_item;
+	}
+	
+	// return total price for the shopping cart
+	function getTotalPrice($cart = NULL){
+		if ($cart == NULL){$cart = $this->getCart();}
+		$total = 0;
+		foreach($cart as $item){
+			$total = $total + ($item['price'] - $item['price_discount_amt']);
+		}
+		return $total;
 	}
 
 }
@@ -123,9 +162,13 @@ class dbCart implements IShoppingCart{
 		if ($this->isExistingItem($item)){
 			//add the existing item - so just append the existing qty with new qty
 			$exItem = $this->ci->OrderItemModel->getOrderItem(NULL, $this->order_id, $item['item_id']);
-			$param = array(
-						   'qty' => ($exItem['qty'] + $item['qty']),
-						  );
+			$new_qty = $exItem['qty'] + $item['qty'];
+			
+			if ($new_qty > $exItem['qty_available']){
+				return;		//new qty is greater than what we have in stock, so do nothing and return
+			}
+			
+			$param = array('qty' => ($new_qty));
 			$this->ci->OrderItemModel->updateOrderItem($param, $exItem['order_item_id']);
 		}
 		else{
@@ -217,7 +260,11 @@ class sessionCart implements IShoppingCart{
 		if ($this->isExistingItem($item)){
 			//update existing
 			$index = $this->returnItemIndex($cart, $item['item_id']);
-			$cart[$index]['qty'] = $cart[$index]['qty'] + $item['qty'];
+			$new_qty = $cart[$index]['qty'] + $item['qty'];
+			if ($new_qty > $cart[$index]['qty_available']){
+				return;		//new qty is greater than what we have in stock, so do nothing and return
+			}
+			$cart[$index]['qty'] = $new_qty;
 		}
 		else{
 			//add new
