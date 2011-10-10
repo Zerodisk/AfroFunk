@@ -238,14 +238,14 @@ class sessionCart implements IShoppingCart{
 
 	function updateCart($item){
 		if ($this->isExistingItem($item)){	
-			if ($item['qty'] == 0){		//remober item if qty set to 0
+			if ($item['qty'] == 0){		//remove item if qty set to 0
 				$this->removeCard($item['item_id']);
 			}
 			else{
 				$cart = $this->getCart();
 				$index = $this->returnItemIndex($cart, $item['item_id']);
 				if ($index < 0)
-					return FALSE;  //not match item_id
+					return FALSE;  		//not match item_id
 	
 				$cart[$index]['qty'] = $item['qty'];
 				$this->ci->session->set_userdata($this->order_id, $cart);				

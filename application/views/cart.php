@@ -1,21 +1,27 @@
-<h1>your shopping cart</h1>
-<script>
+<script type="text/javascript">
 function removeItem(item_id){
 	document.frmCart.cmdCart.value = 'removeCartItem';
 	document.frmCart.item_id.value = item_id;
 	document.frmCart.submit();
 }
+
+function updateCart(){
+	document.frmCart.cmdCart.value = 'updateCart';
+	document.frmCart.submit();
+}
 </script>
+
+<h1>your shopping cart</h1>
 <form name="frmCart" action="<?= base_url().'cart' ?>" method="post">
-	<table width="800">
+	<table>
 		<tr>
-			<td>product id</td>
-			<td>product name</td>
+			<td>&nbsp;</td>
+			<td>product</td>
 			
-			<td>price</td>
+			<td>price each</td>
 			<td>qty</td>
 			<td>#</td>
-			<td>total</td>
+			<td>total price</td>
 		</tr>
 		<?foreach($cart as $item){?>
 		  <tr>
@@ -36,5 +42,5 @@ function removeItem(item_id){
 	
 	<input type="hidden" name="cmdCart" value="" />
 	<input type="hidden" name="item_id" value="" />
-	<input type="submit" name="btnUpdateCart" value="update cart" />
+	<input type="button" name="btnUpdateCart" value="update cart" onclick="updateCart()" />
 </form>

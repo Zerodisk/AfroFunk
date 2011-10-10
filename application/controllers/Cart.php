@@ -26,10 +26,10 @@ class Cart extends CI_Controller{
     				}
     				break;
     			case 'updateCart':
-    				
-    				
-    				
-    				
+    				$items = $this->extractItem($this->input->post());
+    				foreach($items as $item){
+    					$this->shoppingcart->updateCart($item['item_id'], $item['qty']);
+    				}
     				break;
     			case 'removeCartItem':
     				$item_id = $this->input->post('item_id');
@@ -74,6 +74,29 @@ class Cart extends CI_Controller{
      ***********************************/
     
     /*
+     * extract all http post variable to the new format
+     * input: form post interested will name started with item_id-[db item id] (i.e. item_id-5 it mean item_id = 5)
+     * output:
+     * format is array(
+     * 					'item_id'
+     * 					'qty'
+     * 				  )
+     */
+    private function extractItem($post){
+    	$return = array();
+    	foreach(array_keys($post) as $key){
+    		if (substr($key, 0, 8) == 'item_id-'){
+    			$new = array(
+    			              'item_id' => substr($key, 8, (strlen($key) - 8)),
+    			              'qty'     => $post[$key],
+    						);	
+    			array_push($return, $new);
+    		}
+    	}
+    	return $return;
+    }
+    
+    /*
      * function return cart information for the mvc-view
      */
     private function customizeCart($cart){
@@ -97,7 +120,17 @@ class Cart extends CI_Controller{
     
     //return extra production for size and color
     private function getProductExtra($color, $size){
-    	return '('.$color.' - '.$size.')';
+    	$return = '';
+    	if (isset($color) && isset($size)){
+    		$return = '(color: '.$color.' - size: '.$size.')';
+    	}
+    	else if(!isset($color) && isset($size)){
+    		$return = '(size: - '.$size.')';
+    	}
+    	else if(isset($color) && !isset($size)){
+    		$return = '(color - '.$color.')';
+    	}
+    	return $return;
     }
     
     //return the drop down menu for max qty
