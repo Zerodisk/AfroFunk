@@ -17,6 +17,7 @@ class Test extends CI_Controller{
         $this->load->model('ShippingModel');
         $this->load->model('OrderModel');
         $this->load->model('OrderItemModel');
+        $this->load->model('CountryModel');
         
         //load variable for header/footer/title
         $data['header'] = $this::_getHeader();
@@ -237,7 +238,10 @@ class Test extends CI_Controller{
     	$this->OrderModel->updateOrderPrice($order_id);
     }
     
-    
+    public function country_list(){
+    	$countries = $this->CountryModel->getCountryList(TRUE, 'country_name');
+    	var_dump($countries);
+    }
     
     
     

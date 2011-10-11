@@ -14,11 +14,14 @@ class PhotoModel extends CI_Model{
 
     //function return list of photo by a given product_id
     function getPhotoListByProductId($product_id, $active_only = TRUE){
+    	$sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and is_active = 1 ';
+    	}
     	$sql = 'select *, filename as photo_filename from photo 
-    			where product_id = ? and is_active = ? 
-    			order by is_main DESC, weight ASC';
+    			where product_id = ? '.$sql_extra.' order by is_main DESC, weight ASC';
 
-        $query = $this->db->query($sql, array($product_id, ($active_only) ? 1 : 0));
+        $query = $this->db->query($sql, array($product_id));
         $data = $query->result_array();
         
         $query->free_result();  

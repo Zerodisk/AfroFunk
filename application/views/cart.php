@@ -9,6 +9,16 @@ function updateCart(){
 	document.frmCart.cmdCart.value = 'updateCart';
 	document.frmCart.submit();
 }
+
+function checkOut(){
+	if (document.frmCart.shipping_country_id.selectedIndex == 0){
+		//no shipping country selected
+		alert('');
+		return;
+	}
+
+	
+}
 </script>
 
 <h1>your shopping cart</h1>
@@ -17,8 +27,7 @@ function updateCart(){
 <form name="frmCart" action="<?= base_url().'cart' ?>" method="post">
 	<table>
 		<tr>
-			<td>&nbsp;</td>
-			<td>product</td>
+			<td colspan="2">product</td>
 			
 			<td>price each</td>
 			<td>qty</td>
@@ -29,7 +38,7 @@ function updateCart(){
 		  <tr>
 			<td><img src="<?=base_url().'product/photo/'.$item['product_id'] ?>" width="50" /></td>
 			<td>
-				<?=$item['product_name'] ?>
+				<a href="<?=base_url().'product/'.$item['product_id'] ?>"><?=$item['product_name'] ?></a>
 				<br>
 				<?=$item['product_name_extra'] ?>
 			</td>
@@ -40,10 +49,23 @@ function updateCart(){
 			<td><?=$item['qty'] * $item['price_sell'] ?></td>
 		  </tr>	 
 		<?}?>
+		  <tr>
+		    <td colspan="4">&nbsp;</td>
+		    <td>total:</td>
+		    <td><?=$cart_total_price?></td>
+		  </tr>
 	</table>
 	
-	<div>total price: $<?=$cart_total_price ?></div>
+	<br />
+	<div>shipping destination: <?=form_dropdown('shipping_country_id', $countries_options, $shipping_country_id)?></div>
 	
+	<br />
+	<div>shipping cost $<?=$shipping_price ?></div>
+	
+	<br />
+	<div>total price: $<?=($cart_total_price + $shipping_price) ?></div>
+	
+	<br />
 	<input type="hidden" name="order_id" value="<?=$order_id ?>" />
 	<input type="hidden" name="cmdCart" value="" />
 	<input type="hidden" name="item_id" value="" />

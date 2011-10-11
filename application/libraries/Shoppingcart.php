@@ -118,7 +118,7 @@ class Shoppingcart{
 		if ($cart == NULL){$cart = $this->getCart();}
 		$total = 0;
 		foreach($cart as $item){
-			$total = $total + ($item['price'] - $item['price_discount_amt']);
+			$total = $total + (($item['price'] - $item['price_discount_amt']) * $item['qty']);
 		}
 		return $total;
 	}

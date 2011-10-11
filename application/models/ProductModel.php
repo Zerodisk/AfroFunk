@@ -13,20 +13,23 @@ class ProductModel extends CI_Model{
     									$order_by 		 = 'date_created', 
     									$order_direction = 'DESC', 
     									$limit 			 = null){
-    										
+    									
+    	$sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and p.is_active = 1 ';
+    	}
         $sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
         	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename 
         	    from product p left join photo o on (p.product_id = o.product_id and o.is_main = 1) 
-        	    where p.category_id = ?
-        		and p.is_active = ?';
+        	    where p.category_id = ?'.$sql_extra;
         
         $sql = $sql.' order by p.'.$this->db->escape_str($order_by).' '.$this->db->escape_str($order_direction);
         
         if($limit != null)
         	$sql = $sql.' limit '.$limit;
         
-        $query = $this->db->query($sql, array($category_id, ($active_only) ? 1 : 0));
+        $query = $this->db->query($sql, array($category_id));
         $data = $query->result_array();
         
         $query->free_result();  
@@ -35,11 +38,15 @@ class ProductModel extends CI_Model{
     
     //function return product by a given product_id
     function getProductById($product_id, $active_only = TRUE){
+    	$sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and is_active = 1 ';
+    	}
         $sql = 'select product_id, product_name, description, size_description, 
                 price, price_discount_amt, price - price_discount_amt as price_sell, 
-        		is_active, date_created, date_modified from product where product_id = ? and is_active = ?';
-            
-        $query = $this->db->query($sql, array($product_id, ($active_only) ? 1 : 0));
+        		is_active, date_created, date_modified from product where product_id = ?'.$sql_extra;
+        
+        $query = $this->db->query($sql, array($product_id));
         //$data = $query->result_array();
         $data = $query->row_array();
         $query->free_result();  

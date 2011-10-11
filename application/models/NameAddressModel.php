@@ -1,7 +1,7 @@
 <?php
 class NameAddressModel extends CI_Model{
     
-    function NameAddressModel()
+    function __construct()
     {
         // Call the Model constructor
         parent::__construct();

@@ -6,6 +6,7 @@ class Cart extends CI_Controller{
         
         //load models and library
         $this->load->library('shoppingcart');
+        $this->load->library('session');
         $this->load->helper('form');
         
         //load header+footer+title
@@ -16,6 +17,8 @@ class Cart extends CI_Controller{
     }
     
     public function index(){
+    	$shipping_country_id = -1;
+    	
     	//check if there is any commande request
     	if ($this->input->post('cmdCart')){
     		switch ($this->input->post('cmdCart')){
@@ -25,10 +28,15 @@ class Cart extends CI_Controller{
     					$this->shoppingcart->addCart($item_id);
     				}
     				break;
-    			case 'updateCart':
+    			case 'updateCart' || 'checkOut':
     				$items = $this->extractItem($this->input->post());
     				foreach($items as $item){
     					$this->shoppingcart->updateCart($item['item_id'], $item['qty']);
+    				}
+    				
+    				//save shipping country_id if there is value there
+    				if ($this->input->post('shipping_country_id') != FALSE){
+    					$this->session->set_userdata('shipping_country_id', $this->input->post('shipping_country_id'));
     				}
     				break;
     			case 'removeCartItem':
@@ -44,14 +52,32 @@ class Cart extends CI_Controller{
     	$cart = $this->shoppingcart->getCart();
     	$num_item = $this->shoppingcart->getNumberOfItem($cart);
     	
+    	//get shipping country id - save it in codeigniter sessions
+    	if ($this->session->userdata('shipping_country_id') != FALSE){
+    		$shipping_country_id = $this->session->userdata('shipping_country_id');
+    	}
+    	
+    	//get shipping cost by country_id
+    	$shipping = $this->getShippingCost($shipping_country_id);
+    	$shipping_price = 0;
+    	$shipping_item_id = 0;
+    	if ($shipping != NULL){
+    		$shipping_price = $shipping['price'];
+    		$shipping_item_id = $shipping['item_id'];
+    	}
+    	
     	//load all neccesary main data
         $data['main'] = array(
         					'order_id'	  	   => $this->shoppingcart->getOrderId(),			//order_id for this cart
         					'cart' 		       => $this->customizeCart($cart),					//cart and all items
         					'cart_num_item'    => $num_item,									//number of item in cart
         					'cart_total_price' => $this->shoppingcart->getTotalPrice($cart),	//total price for this cart
+        					'countries_options'   => $this->getShippingCountryDropdown(),		//for country drop down options
+        					'shipping_country_id' => $shipping_country_id,						//user selected shipping country_id
+        					'shipping_price'	  => $shipping_price,							//shipping cost
+        					'shipping_item_id'    => $shipping_item_id,							//shipping item_id
         				);
-        
+
         //load page name
         $data['page'] = 'cart';
 
@@ -65,15 +91,7 @@ class Cart extends CI_Controller{
     
     
     
-    /***********************************
-     *
-     * private function for
-     * - header
-     * - footer
-     * - title
-     * - customizeCart
-     * 
-     ***********************************/
+    /****************************** private function for ********************************/
     
     /*
      * extract all http post variable to the new format
@@ -99,7 +117,7 @@ class Cart extends CI_Controller{
     }
     
     /*
-     * function return cart information for the mvc-view
+     * function return cart information for the mvc-view cart page
      */
     private function customizeCart($cart){
     	$return = array();
@@ -113,7 +131,7 @@ class Cart extends CI_Controller{
     							'qty_options'		 => $this->getQtyDropdown($item['qty_available']),
     							'price'				 => $item['price'],
     							'price_discount_amt' => $item['price_discount_amt'],
-    							'price_sell'		 => $this->getPriceSell($item['price'], $item['price_discount_amt']),
+    							'price_sell'		 => ($item['price'] - $item['price_discount_amt']),
     						 );
     		array_push($return, $cus_item);
     	}
@@ -144,9 +162,25 @@ class Cart extends CI_Controller{
     	return $options;
     }
     
-    //return price for sell after discount
-    private function getPriceSell($price, $price_discount_amt){
-    	return $price - $price_discount_amt; 
+    /*
+     * return active country drop down options
+     */
+    private function getShippingCountryDropdown(){
+    	$this->load->model('CountryModel');
+    	$options = array();
+    	$countries = $this->CountryModel->getCountryList();
+    	$options[-1] = 'select your shipping country';
+    	foreach ($countries as $country){
+    		$options[$country['country_id']] = $country['country_name'];
+    	}
+    	return $options;
+    }
+    
+    private function getShippingCost($country_id){
+    	if ($country_id <= 0){return NULL;}
+    	$this->load->model('ShippingModel');
+    	$shipping = $this->ShippingModel->getShippingCostByCountry($country_id);
+    	return $shipping;
     }
     
     private function _getHeader(){
