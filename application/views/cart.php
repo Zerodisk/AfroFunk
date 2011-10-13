@@ -13,12 +13,13 @@ function updateCart(){
 function checkOut(){
 	if (document.frmCart.shipping_country_id.selectedIndex == 0){
 		//no shipping country selected
-		alert('');
+		alert('select your shipping country');
 		return;
 	}
-
-	
+	document.frmCart.cmdCart.value = 'checkOut';
+	document.frmCart.submit();
 }
+
 </script>
 
 <h1>your shopping cart</h1>
@@ -70,4 +71,8 @@ function checkOut(){
 	<input type="hidden" name="cmdCart" value="" />
 	<input type="hidden" name="item_id" value="" />
 	<input type="button" name="btnUpdateCart" value="update cart" onclick="updateCart()" />
+	&nbsp;
+	<?if ($cart_num_item > 0) {?>
+	<input type="button" name="btnCheckOut" value="check out" onclick="checkOut()" />
+	<?}?>
 </form>

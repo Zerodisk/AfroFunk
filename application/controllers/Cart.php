@@ -38,6 +38,11 @@ class Cart extends CI_Controller{
     				if ($this->input->post('shipping_country_id') != FALSE){
     					$this->session->set_userdata('shipping_country_id', $this->input->post('shipping_country_id'));
     				}
+    				
+    				//do check out redirection
+    				if ($this->input->post('cmdCart') == 'checkOut'){
+    					redirect('checkout');
+    				}
     				break;
     			case 'removeCartItem':
     				$item_id = $this->input->post('item_id');
