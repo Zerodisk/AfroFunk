@@ -5,8 +5,10 @@ class Checkout extends CI_Controller{
         parent::__construct();
         
         //load models and library
+        $this->load->model('CountryModel');
         $this->load->library('shoppingcart');
         $this->load->library('session');
+        $this->load->library('form_validation');
         $this->load->helper('form');
         
         //load header+footer+title
@@ -17,6 +19,25 @@ class Checkout extends CI_Controller{
     }
     
     public function index(){
+    	//check if there is any commande request
+    	if ($this->input->post('cmdCheckout')){
+    		switch ($this->input->post('cmdCheckout')){
+    			case 'confirmOrder':
+    				//validate all name address
+    				
+    				
+    				//save all name address or update if it's there
+    				
+    				
+    				//redirect to confirm page 
+    				
+    				
+    				break;
+    		}
+    	}
+    	
+    	
+    	
     	//load all neccesary main data
         $data['main'] = array(
 

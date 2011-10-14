@@ -5,6 +5,7 @@ class Cart extends CI_Controller{
         parent::__construct();
         
         //load models and library
+        $this->load->model('CountryModel');
         $this->load->library('shoppingcart');
         $this->load->library('session');
         $this->load->helper('form');
@@ -77,7 +78,7 @@ class Cart extends CI_Controller{
         					'cart' 		       => $this->customizeCart($cart),					//cart and all items
         					'cart_num_item'    => $num_item,									//number of item in cart
         					'cart_total_price' => $this->shoppingcart->getTotalPrice($cart),	//total price for this cart
-        					'countries_options'   => $this->getShippingCountryDropdown(),		//for country drop down options
+        					'countries_options'   => $this->CountryModel->getShippingCountryDropdown(-1, 'select your shipping country'),		//for country drop down options
         					'shipping_country_id' => $shipping_country_id,						//user selected shipping country_id
         					'shipping_price'	  => $shipping_price,							//shipping cost
         					'shipping_item_id'    => $shipping_item_id,							//shipping item_id
@@ -163,20 +164,6 @@ class Cart extends CI_Controller{
     	$options = array();
     	for ($i = 0; $i <= $qty_available; $i++) {
     		$options[$i] = $i;	
-    	}
-    	return $options;
-    }
-    
-    /*
-     * return active country drop down options
-     */
-    private function getShippingCountryDropdown(){
-    	$this->load->model('CountryModel');
-    	$options = array();
-    	$countries = $this->CountryModel->getCountryList();
-    	$options[-1] = 'select your shipping country';
-    	foreach ($countries as $country){
-    		$options[$country['country_id']] = $country['country_name'];
     	}
     	return $options;
     }

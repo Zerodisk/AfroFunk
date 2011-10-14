@@ -23,6 +23,24 @@ class CountryModel extends CI_Model{
     }
     
     function getCountry($country_id){
-    	
+    	//still don't know why we need this :(  so do nothing for now
+    }
+    
+    /*
+    * return active country drop down options
+    *  input are the first list in drop down box
+    *   - $initialValue is value in dropdown list
+    *   - $initialText  is the text display in dropdown list
+    *  
+    *  output is the array option for codigniter form_dropdown function
+    */
+    function getShippingCountryDropdown($initialValue, $initialText){
+    	$options = array();
+    	$countries = $this->getCountryList();
+    	$options[$initialValue] = $initialText;
+    	foreach ($countries as $country){
+    		$options[$country['country_id']] = $country['country_name'];
+    	}
+    	return $options;
     }
 }

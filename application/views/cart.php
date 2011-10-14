@@ -1,4 +1,5 @@
 <script type="text/javascript">
+<!--
 function removeItem(item_id){
 	document.frmCart.cmdCart.value = 'removeCartItem';
 	document.frmCart.item_id.value = item_id;
@@ -14,12 +15,13 @@ function checkOut(){
 	if (document.frmCart.shipping_country_id.selectedIndex == 0){
 		//no shipping country selected
 		alert('select your shipping country');
+		document.frmCart.shipping_country_id.focus();
 		return;
 	}
 	document.frmCart.cmdCart.value = 'checkOut';
 	document.frmCart.submit();
 }
-
+//-->
 </script>
 
 <h1>your shopping cart</h1>
