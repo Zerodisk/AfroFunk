@@ -51,16 +51,24 @@ class OrderModel extends CI_Model{
     
     /*
      * this function will add all items from shopping cart to order_item table
-     * 2 parameters
-     *  - order_id
+     * 1 input parameters
      *  - shopping cart
      */
-    function addCartToOrder($order_id, $cart){
-    	//empty existing order item before add new
+    function addCartToOrder($cart, $autoUpdatePrice = TRUE){
+    	$order_id = $this->addOrder_Initial();
+    	foreach($cart as $item){
+    		$param = array(
+						   'qty'   				=> $item['qty'],
+					       'price' 				=> $item['price'],
+						   'price_discount_amt' => $item['price_discount_amt'],
+						  );
+			$this->OrderItemModel->addOrderItem($item['item_id'], $order_id, $param);	
+    	}
     	
-    	
-    	//start adding
-    	
+    	if ($autoUpdatePrice){
+    		$this->updateOrderPrice($order_id);
+    	}
+    	return $order_id;
     }
     
     //remove all order item for a given order_id

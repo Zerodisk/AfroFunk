@@ -40,6 +40,10 @@ class Shoppingcart{
 		}
 	}
 	
+	function getConfigCartType(){
+		return $this->ci->config->item('afro_cart_config');
+	}
+	
 	//return current order_id
 	function getOrderId(){
 		return $this->cart->getOrderId();

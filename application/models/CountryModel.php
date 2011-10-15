@@ -34,10 +34,13 @@ class CountryModel extends CI_Model{
     *  
     *  output is the array option for codigniter form_dropdown function
     */
-    function getShippingCountryDropdown($initialValue, $initialText){
+    function getShippingCountryDropdown($initialValue = NULL, $initialText = NULL){
     	$options = array();
     	$countries = $this->getCountryList();
-    	$options[$initialValue] = $initialText;
+    	
+    	if (($initialValue != NULL) && ($initialText != NULL))
+    		$options[$initialValue] = $initialText;
+    	
     	foreach ($countries as $country){
     		$options[$country['country_id']] = $country['country_name'];
     	}
