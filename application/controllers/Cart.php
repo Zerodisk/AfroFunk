@@ -5,9 +5,22 @@ class Cart extends MY_Controller{
         parent::__construct();
         
         //load models and library
-        $this->load->model('CountryModel');
-        $this->load->library('shoppingcart');
         $this->load->library('session');
+        if ($this->session->userdata('db_order_id') != FALSE){
+        	/*
+        	 * found new confirm db_order_id, then 
+        	 *    1. load shoppingcart with db parameter
+        	 * 	  2. manual overwrite codeigniter session order_id with db_order_id	
+        	 */
+        	$this->load->library('shoppingcart', array('db'));
+        	$this->session->set_userdata('order_id',$this->session->userdata('db_order_id'));
+        }
+        else{
+        	$this->load->library('shoppingcart');
+        }
+        
+        $this->load->model('CountryModel');
+        $this->load->model('OrderModel');
         $this->load->helper('form');
         
         //load header+footer+title
@@ -21,38 +34,57 @@ class Cart extends MY_Controller{
     	$shipping_country_id = -1;
     	
     	//check if there is any commande request
-    	if ($this->input->post('cmdCart')){
-    		switch ($this->input->post('cmdCart')){
-    			case 'addCart':
-    				$item_id = $this->input->post('item_id');
-    				if ($item_id > 0){
-    					$this->shoppingcart->addCart($item_id);
-    				}
-    				break;
-    			case 'updateCart' || 'checkOut':
-    				$items = $this->extractItem($this->input->post());
-    				foreach($items as $item){
-    					$this->shoppingcart->updateCart($item['item_id'], $item['qty']);
-    				}
+   		switch ($this->input->post('cmdCart')){
+    		case 'addCart':
+    			$item_id = $this->input->post('item_id');
+    			if ($item_id > 0){
+   					$this->shoppingcart->addCart($item_id);
+   				}
+    			break;
     				
-    				//save shipping country_id if there is value there
-    				if ($this->input->post('shipping_country_id') != FALSE){
-    					$this->session->set_userdata('shipping_country_id', $this->input->post('shipping_country_id'));
-    				}
+    		case 'removeCartItem':
+    			$item_id = $this->input->post('item_id');
+    			if ($item_id > 0){
+   					$this->shoppingcart->removeCart($item_id);
+    			}
+    			break;
     				
-    				//do check out redirection
-    				if ($this->input->post('cmdCart') == 'checkOut'){
-    					redirect('checkout');
-    				}
-    				break;
-    			case 'removeCartItem':
-    				$item_id = $this->input->post('item_id');
-    				if ($item_id > 0){
-    					$this->shoppingcart->removeCart($item_id);
-    				}
-    				break;
-    		}
+    		case 'updateCart' || 'checkOut':
+    			//update shopping cart
+    			$items = $this->extractItem($this->input->post());
+    			foreach($items as $item){
+    				$this->shoppingcart->updateCart($item['item_id'], $item['qty']);
+   				}
+    				
+    			//save shipping country_id if there is value there
+    			if ($this->input->post('shipping_country_id') != FALSE){
+    				$this->session->set_userdata('shipping_country_id', $this->input->post('shipping_country_id'));
+    			}
+    				
+    			/*
+    			 * db cart:      1. - do save cart into db
+    			 *               2. - assign db_order_id
+    			 *               
+    			 * session cart: 1. - just assign db_order_id
+    			 * 
+    			 *      then redirection to checkout page
+    			 */
+    			if ($this->input->post('cmdCart') == 'checkOut'){
+    					
+    			    if ($this->shoppingcart->getConfigCartType() == 'session'){
+				   		//save session cart into db order/order_item
+			  			$cart = $this->shoppingcart->getCart();
+				   		$this->session->set_userdata('db_order_id', $this->OrderModel->addCartToOrder($cart, TRUE));
+    			    }
+    			    else{
+    			    	$this->session->set_userdata('db_order_id', $this->shoppingcart->getOrderId());
+    			    }			    	
+    					
+    				redirect('checkout');
+    			}
+    			break;
     	}
+	
     	
     	//get cart
     	$cart = $this->shoppingcart->getCart();

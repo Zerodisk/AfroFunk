@@ -194,7 +194,8 @@ class Test extends CI_Controller{
     }
     
     public function shoppingcart(){
-    	$this->load->library('shoppingcart', array('db'));
+    	//$this->load->library('shoppingcart', array('db'));
+    	$this->load->library('shoppingcart');
     	echo('load shopping cart work!!<br>');
     	echo($this->shoppingcart->getOrderId());
     }
@@ -220,6 +221,8 @@ class Test extends CI_Controller{
     public function shoppingcartclear(){
     	$this->load->library('session');
     	$this->session->unset_userdata('order_id');
+    	$this->session->unset_userdata('db_order_id');
+    	$this->session->unset_userdata('shipping_country_id');
     }
     
     public function shoppingcart_update(){

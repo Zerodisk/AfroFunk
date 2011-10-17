@@ -84,6 +84,15 @@ class OrderItemModel extends CI_Model{
     	return $data;
     }
     
+    function getNumberOfItem($order_id){
+    	$sql = 'select ifnull(sum(qty), 0) as num_item from order_item where order_id = ?';
+    	$query = $this->db->query($sql, $order_id);
+        $data = $query->row_array();
+        
+        $query->free_result();  
+        return $data['num_item'];
+    }
+    
     
     
 }

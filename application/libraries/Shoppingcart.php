@@ -15,8 +15,9 @@
  */
 
 class Shoppingcart{
-	var $ci;
-	var $cart;
+	var $ci;			//codeigniter $this
+	var $cart;			//shopping cart item
+	var $cart_config;	//cart type config (ie. db or session)
 
 	function __construct($cart_config = NULL){
 		$this->ci =& get_instance();
@@ -28,6 +29,7 @@ class Shoppingcart{
 		else{
 			$cart_config = $cart_config[0];
 		}
+		$this->cart_config = $cart_config;
 		
 		//use sessions shopping cart
 		if ($cart_config == 'session'){
@@ -41,7 +43,7 @@ class Shoppingcart{
 	}
 	
 	function getConfigCartType(){
-		return $this->ci->config->item('afro_cart_config');
+		return $this->cart_config;
 	}
 	
 	//return current order_id

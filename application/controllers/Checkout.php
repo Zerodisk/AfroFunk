@@ -6,16 +6,19 @@ class Checkout extends MY_Controller{
     public function __construct(){
         parent::__construct();
         
-        $this->load->library('shoppingcart');
+        $this->load->library('session');
+        $this->load->model('OrderItemModel'); 
+        $this->order_id = $this->session->userdata('db_order_id');	//get db_order_id from codeigniter session
+        
         //redirect back to cart page if cart is empty
-        if ($this->shoppingcart->getNumberOfItem() <= 0){
+        if ($this->_getNumberOfItem($this->order_id) <= 0){
         	redirect('cart');			//cart empty
         }       
         
         //load models and library
         $this->load->model('NameAddressModel');
-        $this->load->model('CountryModel');        
-        $this->load->library('session');
+        $this->load->model('CountryModel');   
+        $this->load->model('OrderModel');  
         $this->load->library('form_validation');
         $this->load->helper('form');
 		
@@ -24,9 +27,6 @@ class Checkout extends MY_Controller{
         $data['footer'] = $this::_getFooter();
         $data['title']  = $this::_getTitle();
         $this->load->vars($data);
-        
-        //get order_id from sessions
-        $this->order_id = $this->shoppingcart->getOrderId();
     }
     
     public function index(){
@@ -34,47 +34,36 @@ class Checkout extends MY_Controller{
     	$billing_country_id  = $this->session->userdata('shipping_country_id'); //set default billing country from cart page
     	
     	//check if there is any commande request
-    	if ($this->input->post('cmdCheckout')){
-    		switch ($this->input->post('cmdCheckout')){
-    			case 'confirmOrder':
-    				//set form validation rule
-        			$this->_setValidationRule();
-    				
-    				//get postback for selected country
-    				$shipping_country_id = $this->input->post('shp_country_id');
-    				$billing_country_id  = $this->input->post('bil_country_id');
-    				
-    				//validate all name address
-    				if ($this->form_validation->run() == FALSE){
-						//error validation
-					}
-					else{
-						//success validate						
-	    				$this->_saveOrder();		//save all name address or update if it's existed
-	    					    				
-	    				redirect('confirm'); 		//redirect to confirm page
-					}    	
-    				
-    				break;
-    			default:
-    				//do nothing and it shouldn't be anything landed here
+    	switch ($this->input->post('cmdCheckout')){
+    		case 'confirmOrder':
+    			//get postback for selected country
+    			$shipping_country_id = $this->input->post('shp_country_id');
+    			$billing_country_id  = $this->input->post('bil_country_id');
     			
-    				break;
-    		}
-    		
-//    		$form_data = $this->_returnFormValue(TRUE);
-    	}
-    	else{    		
-    		//hit this page directly, check if there is any existing name and address, if yes then pull them from db
+    			//set form validation rule
+        		$this->_setValidationRule();    				    			    				
+    			//validate all name address
+    			if ($this->form_validation->run() == FALSE){
+					//error validation
+				}
+				else{
+					//success validate						
+	    			$this->_saveOrder();		//save all name address or update if it's existed
+	    			redirect('confirm'); 		//redirect to confirm page
+				}   
 
-/*
-    		$form_data = $this->_returnFormValue(FALSE);
-    		$shipping_country_id = $form_data->shp_country_id;
-    		$billing_country_id  = $form_data->bil_country_id;
-*/
-    	}
-    	
-    	
+				$form_data = $this->_returnFormValue(TRUE);
+    				
+    			break;
+    		default:
+				//hit checkout page directly
+		   		$form_data = $this->_returnFormValue(FALSE);
+		   		if ($form_data->shp_country_id != NULL){$shipping_country_id = $form_data->shp_country_id;}
+		   		if ($form_data->bil_country_id != NULL){$billing_country_id  = $form_data->bil_country_id;}
+
+    			break;
+   		}
+   		
     	//load all neccesary main data
         $data['main'] = array(
         					'order_id'			  => $this->order_id,
@@ -82,7 +71,7 @@ class Checkout extends MY_Controller{
         					'shipping_country_id' => $shipping_country_id,
         					'billing_country_id'  => $billing_country_id,
         					'main_error_message'  => '<span class="error" style="color:red">There is an error, please see below in red text</span>',
-//        					'form_data'			  => $form_data,
+        					'form_data'			  => $form_data,
         				);
 
         //load page name
@@ -95,43 +84,64 @@ class Checkout extends MY_Controller{
     
     
     /*********************** private function ************************/
-/*    
+    
+    /*
+     * function return form data to be filled on the page
+     *  take 1 parameter - $isSubmitted
+     *       					true:  page is submitted 
+     *       					       load all variable back from http post
+     *       					false: page is not submitted, page might be load directly
+     *       						   load all variable from db (order and name_address table)
+     *  return object/class checkout_form_data()
+     */
     private function _returnFormValue($isSubmitted){
     	$return = new checkout_form_data();
     	if ($isSubmitted){
-    		$return->bil_first_name = $this->input->post('bil_first_name');
-    		$return->bil_last_name  = $this->input->post('bil_last_name');
+    		//submitted - read from http post
+    		foreach(array_keys($this->input->post()) as $key){
+    			$return->setValue($key, $this->input->post($key));
+    		}
     	}
     	else{
+    		//not sumitted - read from db
 			$order = $this->OrderModel->getOrder($this->order_id);
-			$bil_name_address = 
-			$shp_name_address = 
+			$return->ord_email   = $order['email'];
+			$return->ord_mobile  = $order['mobile'];
+			$return->ord_phone   = $order['phone'];
 			
+			$return->bil_country_id = NULL;
+			$return->shp_country_id = NULL;
 			
-			
-			
+			if ($order['bill_name_address_id'] != NULL){
+				$bil_name_address = $this->NameAddressModel->getNameAddress($order['bill_name_address_id']);
+
+				foreach(array_keys($bil_name_address) as $key){
+	    			$return->setValue('bil_'.$key, $bil_name_address[$key]);
+	    		}
+			}
+    		if ($order['ship_name_address_id'] != NULL){
+				$shp_name_address = $this->NameAddressModel->getNameAddress($order['ship_name_address_id']);
+				
+    			foreach(array_keys($shp_name_address) as $key){
+	    			$return->setValue('shp_'.$key, $shp_name_address[$key]);
+	    		}
+			}
 			
     	}
     	return $return;
     }
-*/
-        
+
+    /*
+     * save/update data to order table
+     *   - save both name_address
+     *   - return order_id
+     */    
     private function _saveOrder(){
-    	if ($this->shoppingcart->getConfigCartType() == 'session'){
-    		//save session cart into db order/order_item
-    		$cart = $this->shoppingcart->getCart();
-    		$order_id = $this->OrderModel->addCartToOrder($cart, FALSE);
-    	}
-    	else{
-    		//order already store in db, return db order_id
-    		$order_id = $this->order_id;
-    	}
-    	
-    	//make sure update total order price again
-    	$this->OrderModel->updateOrderPrice($order_id);
+    	//double make sure by update total order price again
+    	$this->OrderModel->updateOrderPrice($this->order_id);
  
     	//save name address
-    	$name_address = $this->_saveNameAddress($order_id);
+    	$name_address = $this->_saveNameAddress();
     	
     	$param = array(
     	  				'first_name' => $this->input->post('bil_first_name'),
@@ -142,8 +152,7 @@ class Checkout extends MY_Controller{
     				    'bill_name_address_id' => $name_address['bill_name_address_id'],
     					'ship_name_address_id' => $name_address['ship_name_address_id'],
     				  );
-    	$this->OrderModel->updateOrder($order_id, $param);
-    	return $order_id;
+    	$this->OrderModel->updateOrder($this->order_id, $param);
     }
     
     /*  for save billing+shipping name address into name_address table
@@ -154,8 +163,8 @@ class Checkout extends MY_Controller{
      *              ) 
      */
     
-    private function _saveNameAddress($order_id){
-    	$order = $this->OrderModel->getOrder($order_id);
+    private function _saveNameAddress(){
+    	$order = $this->OrderModel->getOrder($this->order_id);
     	if (($order['bill_name_address_id'] == NULL) && ($order['ship_name_address_id'] == NULL)){
     		$isNew = TRUE;
     	}
@@ -190,6 +199,9 @@ class Checkout extends MY_Controller{
     	return $return;
     }
     
+    /*
+     * set codeigniter validation rule
+     */
     private function _setValidationRule(){
     	$this->form_validation->set_rules('bil_first_name', 'first name' 	, 'trim|required');
     	$this->form_validation->set_rules('bil_last_name' , 'last name'  	, 'trim|required');
@@ -207,6 +219,15 @@ class Checkout extends MY_Controller{
     	$this->form_validation->set_rules('shp_postcode'  , 'postcode'  , 'trim|required');
     	
     	$this->form_validation->set_error_delimiters('<span class="error" style="color:red;">', '</span>');
+    }
+    
+    /*
+     * return total number of item in order_item table for a given order_id
+     *    if $order_id == false mean there is no codeigniter session name db_order_id
+     */
+    private function _getNumberOfItem($order_id){
+    	if ($order_id == FALSE){return -1;}
+    	return $this->OrderItemModel->getNumberOfItem($order_id);
     }
     
     private function _getHeader(){
@@ -231,24 +252,23 @@ class Checkout extends MY_Controller{
 }
 
 class checkout_form_data{
-	public $bil_first_name;
-	public $bil_last_name;
-	public $ord_email;
-	public $bil_address_1;
-	public $bil_address_2; 
-	public $bil_city; 
-	public $bil_state;
-	public $bil_postcode;
-	public $bil_country_id;
-	public $ord_phone;
-	public $ord_mobile;
 	
-	public $shp_first_name;
-	public $shp_last_name;
-	public $shp_address_1;
-	public $shp_address_2;
-	public $shp_city;
-	public $shp_state;
-	public $shp_postcode;
-	public $shp_country_id;
+	private $data = array();
+	
+	public function __get($var_name){
+		if (isset($this->data[$var_name])){
+			return $this->data[$var_name];
+		}
+		else{
+			return NULL;
+		}
+	}
+	
+	public function __set($var_name, $value) {
+		$this->data[$var_name] = $value;
+	}
+	
+	public function setValue($var_name, $value){
+		$this->data[$var_name] = $value;
+	}
 }

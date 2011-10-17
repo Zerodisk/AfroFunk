@@ -37,8 +37,8 @@
    All admin page that need admin authentication will need to extended MY_Controller instead of CI_Controller
 
 9. these are reserve list for codeigniter sessions variable name
-	- order_id => for order if
+	- 'order_id' => for order if
 	- the value of order_id (i.e. if order_id = 1234567890, then the session name will be 1234567890 too
-	- shipping_country_id => for shipping country_id
-	
+	- 'shipping_country_id' => for shipping country_id
+	- 'db_order_id' => real order_id in db
 	
