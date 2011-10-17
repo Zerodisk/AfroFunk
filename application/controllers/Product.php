@@ -1,5 +1,5 @@
 <?php
-class Product extends CI_Controller{
+class Product extends MY_Controller{
     
     public function Product(){
         parent::__construct();

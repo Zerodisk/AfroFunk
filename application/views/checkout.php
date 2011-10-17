@@ -33,7 +33,11 @@ function isFormValid(){
 </script>
 
 <h1>check out page</h1>
-<div><?= validation_errors(); ?></div>
+<div>
+	<?if (strlen(validation_errors()) > 0){ 
+		echo($main_error_message);
+	}?>
+</div>
 <form name="frmCheckout" action="<?= base_url().'checkout' ?>" method="post">
 
 	<h2>billing address</h2>
@@ -41,42 +45,58 @@ function isFormValid(){
 		<?=form_error('bil_first_name')?>
 		<br />
 		last name: <input type="text" name="bil_last_name" value="<?=set_value('bil_last_name') ?>" />
+		<?=form_error('bil_last_name')?>
 		<br />
 		email: <input type="text" name="ord_email" value="<?=set_value('ord_email') ?>" />
+		<?=form_error('ord_email')?>
 		<br />
 		address 1: <input type="text" name="bil_address_1" value="<?=set_value('bil_address_1') ?>" />
+		<?=form_error('bil_address_1')?>
 		<br />
 		address 2: <input type="text" name="bil_address_2" value="<?=set_value('bil_address_2') ?>" />
+		<?=form_error('bil_address_2')?>
 		<br />
 		city: <input type="text" name="bil_city" value="<?=set_value('bil_city') ?>" />
+		<?=form_error('bil_city')?>
 		<br />
 		state: <input type="text" name="bil_state" value="<?=set_value('bil_state') ?>" />
+		<?=form_error('bil_state')?>
 		<br />
 		postcode: <input type="text" name="bil_postcode" value="<?=set_value('bil_postcode') ?>" />
+		<?=form_error('bil_postcode')?>
 		<br />
 		country: <?=form_dropdown('bil_country_id', $countries_options, $billing_country_id)?>
 		<br />
 		phone: <input type="text" name="ord_phone" value="<?=set_value('ord_phone') ?>" />
+		<?=form_error('ord_phone')?>
 		<br />
 		mobile: <input type="text" name="ord_mobile" value="<?=set_value('ord_mobile') ?>" />
+		<?=form_error('ord_mobile')?>
 		<br />
 		
 	<h2>shipping address</h2>
 	<input type="checkbox" name="chkCopyAddress" value="" onclick="copyAddress(this)" /> copy from billing address
 	<br />
 		first name: <input type="text" name="shp_first_name" value="" />
+		<?=form_error('shp_first_name')?>
 		<br />
 		last name: <input type="text" name="shp_last_name" value="" />
+		<?=form_error('shp_last_name')?>
 		<br />
 		address 1: <input type="text" name="shp_address_1" value="" />
+		<?=form_error('shp_address_1')?>
 		<br />
 		address 2: <input type="text" name="shp_address_2" value="" />
+		<?=form_error('shp_address_2')?>
 		<br />
 		city: <input type="text" name="shp_city" value="" />
+		<?=form_error('shp_city')?>
 		<br />
 		state: <input type="text" name="shp_state" value="" />
+		<?=form_error('shp_state')?>
 		<br />
 		postcode: <input type="text" name="shp_postcode" value="" />
+		<?=form_error('shp_postcode')?>
 		<br />
 		country: <?=form_dropdown('shp_country_id', $countries_options, $shipping_country_id)?>
 		<br />

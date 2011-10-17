@@ -1,5 +1,5 @@
 <?php
-class Category extends CI_Controller{
+class Category extends MY_Controller{
     
     public function Category(){
         parent::__construct();

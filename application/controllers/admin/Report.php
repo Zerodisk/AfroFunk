@@ -2,7 +2,7 @@
 class Report extends MY_Controller{
 	
     public function Report(){
-        parent::__construct();
+        parent::__construct('admin');
     }	
     
     public function index(){

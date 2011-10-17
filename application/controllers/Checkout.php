@@ -1,5 +1,5 @@
 <?php
-class Checkout extends CI_Controller{
+class Checkout extends MY_Controller{
 	
 	private $order_id;
     
@@ -21,7 +21,7 @@ class Checkout extends CI_Controller{
         
         //get order_id from sessions
         $this->order_id = $this->shoppingcart->getOrderId();
-        
+
         //load header+footer+title
         $data['header'] = $this::_getHeader();
         $data['footer'] = $this::_getFooter();
@@ -38,7 +38,7 @@ class Checkout extends CI_Controller{
     		switch ($this->input->post('cmdCheckout')){
     			case 'confirmOrder':
     				//set form validation rule
-        			$this->setValidationRule();
+        			$this->_setValidationRule();
     				
     				//get postback for selected country
     				$shipping_country_id = $this->input->post('shp_country_id');
@@ -51,7 +51,7 @@ class Checkout extends CI_Controller{
 					else{
 						//success validate
 						//save all name address or update if it's existed
-	    				$this->saveOrder();
+	    				$this->_saveOrder();
 	    				
 	    				//redirect to confirm page
 	    				redirect('confirm'); 
@@ -69,6 +69,7 @@ class Checkout extends CI_Controller{
 							'countries_options'   => $this->CountryModel->getShippingCountryDropdown(),
         					'shipping_country_id' => $shipping_country_id,
         					'billing_country_id'  => $billing_country_id,
+        					'main_error_message'  => '<span class="error" style="color:red">There is an error, please see below in red text</span>',
         				);
 
         //load page name
@@ -82,7 +83,7 @@ class Checkout extends CI_Controller{
     
     /*********************** private function ************************/
     
-    private function saveOrder(){
+    private function _saveOrder(){
     	if ($this->shoppingcart->getConfigCartType() == 'session'){
     		//save session cart into db order/order_item
     		$cart = $this->shoppingcart->getCart();
@@ -97,7 +98,7 @@ class Checkout extends CI_Controller{
     	$this->OrderModel->updateOrderPrice($order_id);
  
     	//save name address
-    	$name_address = $this->saveNameAddress();
+    	$name_address = $this->_saveNameAddress();
     	
     	$param = array(
     	  				'first_name' => $this->input->post('bil_first_name'),
@@ -120,7 +121,7 @@ class Checkout extends CI_Controller{
      *              ) 
      */
     
-    private function saveNameAddress(){
+    private function _saveNameAddress(){
     	$return = array();
     	$this->load->model('NameAddressModel');
     	$loop = array(
@@ -144,21 +145,23 @@ class Checkout extends CI_Controller{
     	return $return;
     }
     
-    private function setValidationRule(){
-    	$this->form_validation->set_rules('bil_first_name', 'billing first name' , 'trim|required');
-    	$this->form_validation->set_rules('bil_last_name' , 'billing last name'  , 'trim|required');
-    	$this->form_validation->set_rules('ord_email'     , 'email address'      , 'trim|required|valid_email');
-    	$this->form_validation->set_rules('bil_address_1' , 'billing address 1'  , 'trim|required');
-    	$this->form_validation->set_rules('bil_city'      , 'billing city'       , 'trim|required');
-    	$this->form_validation->set_rules('bil_state'     , 'billing state'      , 'trim|required');
-    	$this->form_validation->set_rules('bil_postcode'  , 'billing postcode'   , 'trim|required');
+    private function _setValidationRule(){
+    	$this->form_validation->set_rules('bil_first_name', 'first name' 	, 'trim|required');
+    	$this->form_validation->set_rules('bil_last_name' , 'last name'  	, 'trim|required');
+    	$this->form_validation->set_rules('ord_email'     , 'email address' , 'trim|required|valid_email');
+    	$this->form_validation->set_rules('bil_address_1' , 'address'  		, 'trim|required');
+    	$this->form_validation->set_rules('bil_city'      , 'city'       	, 'trim|required');
+    	$this->form_validation->set_rules('bil_state'     , 'state'      	, 'trim|required');
+    	$this->form_validation->set_rules('bil_postcode'  , 'postcode'   	, 'trim|required');
     	
-    	$this->form_validation->set_rules('shp_first_name', 'shipping first name', 'trim|required');
-    	$this->form_validation->set_rules('shp_last_name' , 'shipping last name' , 'trim|required');
-    	$this->form_validation->set_rules('shp_address_1' , 'shipping address 1' , 'trim|required');
-    	$this->form_validation->set_rules('shp_city'      , 'shipping city'      , 'trim|required');
-    	$this->form_validation->set_rules('shp_state'     , 'shipping state'     , 'trim|required');
-    	$this->form_validation->set_rules('shp_postcode'  , 'shipping postcode'  , 'trim|required');
+    	$this->form_validation->set_rules('shp_first_name', 'first name', 'trim|required');
+    	$this->form_validation->set_rules('shp_last_name' , 'last name' , 'trim|required');
+    	$this->form_validation->set_rules('shp_address_1' , 'address 1' , 'trim|required');
+    	$this->form_validation->set_rules('shp_city'      , 'city'      , 'trim|required');
+    	$this->form_validation->set_rules('shp_state'     , 'state'     , 'trim|required');
+    	$this->form_validation->set_rules('shp_postcode'  , 'postcode'  , 'trim|required');
+    	
+    	$this->form_validation->set_error_delimiters('<span class="error" style="color:red;">', '</span>');
     }
     
     private function _getHeader(){

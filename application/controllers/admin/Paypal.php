@@ -2,7 +2,7 @@
 class Paypal extends MY_Controller{
 	
     public function Paypal(){
-        parent::__construct();
+        parent::__construct('admin');
     }	
     
     public function index(){

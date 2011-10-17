@@ -2,7 +2,7 @@
 class Tool extends MY_Controller{
 	
     public function Tool(){
-        parent::__construct();
+        parent::__construct('admin');
     }	
     
     public function index(){

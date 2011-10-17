@@ -2,7 +2,7 @@
 class Customer extends MY_Controller{
 	
     public function Customer(){
-        parent::__construct();
+        parent::__construct('admin');
         
         //load header+footer+title
         $data['header'] = $this::getHeader();

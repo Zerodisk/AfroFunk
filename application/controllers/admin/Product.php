@@ -2,7 +2,7 @@
 class Product extends MY_Controller{
 	
     public function Product(){
-        parent::__construct();
+        parent::__construct('admin');
             
         //load header+footer+title
         $data['header'] = $this::getHeader();

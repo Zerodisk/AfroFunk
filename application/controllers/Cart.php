@@ -1,5 +1,5 @@
 <?php
-class Cart extends CI_Controller{
+class Cart extends MY_Controller{
     
     public function Cart(){
         parent::__construct();
@@ -64,7 +64,7 @@ class Cart extends CI_Controller{
     	}
     	
     	//get shipping cost by country_id
-    	$shipping = $this->getShippingCost($shipping_country_id);
+    	$shipping = $this->_getShippingCost($shipping_country_id);
     	$shipping_price = 0;
     	$shipping_item_id = 0;
     	if ($shipping != NULL){
@@ -131,10 +131,10 @@ class Cart extends CI_Controller{
     		$cus_item = array(
     							'product_id' 		 => $item['product_id'],
     							'product_name'		 => $item['product_name'],
-    							'product_name_extra' => $this->getProductExtra($item['color_name'], $item['size_name']),
+    							'product_name_extra' => $this->_getProductExtra($item['color_name'], $item['size_name']),
     							'item_id'			 => $item['item_id'],
     							'qty'				 => $item['qty'],
-    							'qty_options'		 => $this->getQtyDropdown($item['qty_available']),
+    							'qty_options'		 => $this->_getQtyDropdown($item['qty_available']),
     							'price'				 => $item['price'],
     							'price_discount_amt' => $item['price_discount_amt'],
     							'price_sell'		 => ($item['price'] - $item['price_discount_amt']),
@@ -145,7 +145,7 @@ class Cart extends CI_Controller{
     }
     
     //return extra production for size and color
-    private function getProductExtra($color, $size){
+    private function _getProductExtra($color, $size){
     	$return = '';
     	if (isset($color) && isset($size)){
     		$return = '(color: '.$color.' - size: '.$size.')';
@@ -160,7 +160,7 @@ class Cart extends CI_Controller{
     }
     
     //return the drop down menu for max qty
-    private function getQtyDropdown($qty_available){
+    private function _getQtyDropdown($qty_available){
     	$options = array();
     	for ($i = 0; $i <= $qty_available; $i++) {
     		$options[$i] = $i;	
@@ -168,7 +168,7 @@ class Cart extends CI_Controller{
     	return $options;
     }
     
-    private function getShippingCost($country_id){
+    private function _getShippingCost($country_id){
     	if ($country_id <= 0){return NULL;}
     	$this->load->model('ShippingModel');
     	$shipping = $this->ShippingModel->getShippingCostByCountry($country_id);

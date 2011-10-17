@@ -1,12 +1,26 @@
 <?php
+/*
+ * this is the main controller where all afro-controller need to inherit
+ *   the __construct can accept one input which is the $section
+ *     - NULL   mean the public afro shopping
+ *     - admin  mean the admin area where we can manage inventory/stock/sale/report
+ */
 class MY_Controller extends CI_Controller{
     
-	public function __construct(){
+	public function __construct($section = NULL){
         parent::__construct();
-        $this->load->library('session');
         
-        if (!$this->session->userdata('isAdminLogined')){
-        	header('Location: '.base_url().'admin/login');
+        switch ($section){
+        	case 'admin':
+        		$this->load->library('session');
+        			 
+        		if (!$this->session->userdata('isAdminLogined')){
+        			header('Location: '.base_url().'admin/login');
+        		}
+        		break;
+        	 default:
+
+        		break;
         }
     }	
     

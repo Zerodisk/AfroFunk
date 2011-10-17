@@ -2,7 +2,7 @@
 class Order extends MY_Controller{
 	
     public function Order(){
-            parent::__construct();
+        parent::__construct('admin');
         
         //load header+footer+title
         $data['header'] = $this::getHeader();
