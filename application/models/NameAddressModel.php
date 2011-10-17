@@ -32,7 +32,9 @@ class NameAddressModel extends CI_Model{
     function updateNameAddress($name_address_id, $param){
     	$param['date_modified'] = date('Y-m-d H:i:s');
     	$this->db->where('name_address_id', $name_address_id);
-    	$this->db->update('name_address', $param);    	
+    	$this->db->update('name_address', $param); 
+
+    	return $name_address_id;
     }
     
     

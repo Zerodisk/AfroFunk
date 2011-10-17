@@ -10,7 +10,14 @@ class OrderModel extends CI_Model{
     
     //return the given order
     function getOrder($order_id){
+    	$sql = 'select order_id, first_name, last_name, email, phone, mobile, price_total,
+    	        bill_name_address_id, ship_name_address_id, order_status, payment_method,
+    	        date_created, date_paid, date_completed from `order` where order_id = ?';
     	
+    	$query = $this->db->query($sql, array($order_id));
+    	$data = $query->row_array();
+    	$query->free_result();
+    	return $data;
     }
     
     //return list of order base on the given parameter

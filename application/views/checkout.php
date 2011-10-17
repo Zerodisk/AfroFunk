@@ -41,7 +41,7 @@ function isFormValid(){
 <form name="frmCheckout" action="<?= base_url().'checkout' ?>" method="post">
 
 	<h2>billing address</h2>
-		first name: <input type="text" name="bil_first_name" value="<?=set_value('bil_first_name') ?>" />
+		first name: <input type="text" name="bil_first_name" value="<?//=$form_data->bil_first_name ?>" />
 		<?=form_error('bil_first_name')?>
 		<br />
 		last name: <input type="text" name="bil_last_name" value="<?=set_value('bil_last_name') ?>" />
