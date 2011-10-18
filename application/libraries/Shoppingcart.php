@@ -8,37 +8,41 @@
  *   - db      => store all shopping cart in db
  *   - session => store all shopping cart in codeigniter sessions variable
  * how to load this library with input cart_config
- *   - for db use       $this->load->library('shoppingcart', array('db'));              
+ *   - for db use       $this->load->library('shoppingcart', array('db', $new_order_id));              
  *   - for session use  $this->load->library('shoppingcart', array('session')); 
  *   
  * ++++ note: the order_id once created will be store on codeigniter sessions variable for both db and session ++++
  */
 
 class Shoppingcart{
-	var $ci;			//codeigniter $this
-	var $cart;			//shopping cart item
-	var $cart_config;	//cart type config (ie. db or session)
+	private $ci;			//codeigniter $this
+	private $cart;			//shopping cart item
+	private $cart_config;	//cart type config (ie. db or session)
 
 	function __construct($cart_config = NULL){
+		$order_id = NULL;
+		$cart_type = NULL;
+		
 		$this->ci =& get_instance();
 		
 		//check if there is input value
 		if ($cart_config == NULL){
-			$cart_config = $this->ci->config->item('afro_cart_config');
+			$cart_type = $this->ci->config->item('afro_cart_config');		//read from config file
 		}
 		else{
-			$cart_config = $cart_config[0];
+			$cart_type = $cart_config[0];									//read from over written data
+			if ($cart_type == 'db') {$order_id = $cart_config[1];}			//overwrite order_id for cart type db only
 		}
-		$this->cart_config = $cart_config;
+		$this->cart_config = $cart_type;
 		
 		//use sessions shopping cart
-		if ($cart_config == 'session'){
+		if ($cart_type == 'session'){
 			$this->cart = new sessionCart();
 		}
-		
+	
 		//use db shopping cart
-		if ($cart_config == 'db'){
-			$this->cart = new dbCart();
+		if ($cart_type == 'db'){
+			$this->cart = new dbCart($order_id);
 		}
 	}
 	
@@ -143,16 +147,19 @@ interface IShoppingCart{
 
 
 class dbCart implements IShoppingCart{
-	var $ci;
-	var $order_id;
+	private $ci;
+	private $order_id;
 
-	function dbCart(){
+	function dbCart($order_id = NULL){
 		$this->ci =& get_instance();
 		$this->ci->load->library('session');
 		$this->ci->load->model('OrderModel');
 		$this->ci->load->model('OrderItemModel');
 
-		$this->order_id = $this->ci->session->userdata('order_id');
+		if ($order_id == NULL)
+			$this->order_id = $this->ci->session->userdata('order_id');		//by default read order_id from codeigniter session
+		else 
+			$this->order_id = $order_id;									//overwriten order_id
 
 		if ($this->order_id == FALSE){
 			$this->order_id = $this->ci->OrderModel->addOrder_Initial();
@@ -241,8 +248,8 @@ class dbCart implements IShoppingCart{
 
 
 class sessionCart implements IShoppingCart{
-	var $ci;
-	var $order_id;
+	private $ci;
+	private $order_id;
 
 	function sessionCart(){
 		$this->ci =& get_instance();

@@ -223,6 +223,7 @@ class Test extends CI_Controller{
     	$this->session->unset_userdata('order_id');
     	$this->session->unset_userdata('db_order_id');
     	$this->session->unset_userdata('shipping_country_id');
+    	$this->session->sess_destroy();
     }
     
     public function shoppingcart_update(){

@@ -96,6 +96,7 @@ class Checkout extends MY_Controller{
      */
     private function _returnFormValue($isSubmitted){
     	$return = new checkout_form_data();
+    	
     	if ($isSubmitted){
     		//submitted - read from http post
     		foreach(array_keys($this->input->post()) as $key){
@@ -108,9 +109,6 @@ class Checkout extends MY_Controller{
 			$return->ord_email   = $order['email'];
 			$return->ord_mobile  = $order['mobile'];
 			$return->ord_phone   = $order['phone'];
-			
-			$return->bil_country_id = NULL;
-			$return->shp_country_id = NULL;
 			
 			if ($order['bill_name_address_id'] != NULL){
 				$bil_name_address = $this->NameAddressModel->getNameAddress($order['bill_name_address_id']);
@@ -126,8 +124,8 @@ class Checkout extends MY_Controller{
 	    			$return->setValue('shp_'.$key, $shp_name_address[$key]);
 	    		}
 			}
-			
     	}
+    	
     	return $return;
     }
 
@@ -165,12 +163,6 @@ class Checkout extends MY_Controller{
     
     private function _saveNameAddress(){
     	$order = $this->OrderModel->getOrder($this->order_id);
-    	if (($order['bill_name_address_id'] == NULL) && ($order['ship_name_address_id'] == NULL)){
-    		$isNew = TRUE;
-    	}
-    	else{
-    		$isNew = FALSE;
-    	}
     	
     	$return = array();
     	$loop = array(
@@ -189,7 +181,7 @@ class Checkout extends MY_Controller{
     						'country_id' => $this->input->post($each['prefix'].'country_id'),
     					  );
     		
-    		if ($isNew){
+    		if (($order['bill_name_address_id'] == NULL) && ($order['ship_name_address_id'] == NULL)){
     			$return[$each['field_name']] = $this->NameAddressModel->addNameAddress($each['address_type'], $param);
     		}
     		else{
@@ -252,7 +244,6 @@ class Checkout extends MY_Controller{
 }
 
 class checkout_form_data{
-	
 	private $data = array();
 	
 	public function __get($var_name){

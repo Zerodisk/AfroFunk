@@ -6,14 +6,15 @@ class Cart extends MY_Controller{
         
         //load models and library
         $this->load->library('session');
+        
+        //if there is db_order_id, use it as main order_id and cart type switch to db
         if ($this->session->userdata('db_order_id') != FALSE){
         	/*
         	 * found new confirm db_order_id, then 
         	 *    1. load shoppingcart with db parameter
         	 * 	  2. manual overwrite codeigniter session order_id with db_order_id	
         	 */
-        	$this->load->library('shoppingcart', array('db'));
-        	$this->session->set_userdata('order_id',$this->session->userdata('db_order_id'));
+        	$this->load->library('shoppingcart', array('db', $this->session->userdata('db_order_id')));
         }
         else{
         	$this->load->library('shoppingcart');
@@ -84,7 +85,6 @@ class Cart extends MY_Controller{
     			}
     			break;
     	}
-	
     	
     	//get cart
     	$cart = $this->shoppingcart->getCart();
