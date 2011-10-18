@@ -8,7 +8,18 @@ class Payment extends MY_Controller{
         
         $this->load->library('session');
         $this->order_id = $this->session->userdata('db_order_id');	//get db_order_id from codeigniter session
+        
+        //for security - read query string oid and compare with codeigniter session db_order_id
+        $db_order_id = $this->input->get_post('oid');
+    	if (strval($this->order_id) != strval($db_order_id)){
+    		header('Location: '.base_url().'cart');
+    	}
 
+        $this->load->model('OrderModel');
+        $this->load->model('OrderItemModel');
+        $this->load->model('NameAddressModel');
+        $this->load->model('ShippingModel');
+        
         //load header+footer+title
         $data['header'] = $this::_getHeader();
         $data['footer'] = $this::_getFooter();
@@ -16,19 +27,33 @@ class Payment extends MY_Controller{
         $this->load->vars($data);
     }
     
-    public function index(){
-    	//read query string oid and compare with codeigniter session db_order_id
-    	$db_order_id = $this->input->get('oid');
-    	if (strval($this->order_id) != strval($db_order_id)){
-    		header('Location: '.base_url().'cart');
+    public function index(){   	
+    	//get order, order_item, shipping cost, billing/shipping address
+    	$order = $this->OrderModel->getOrder($this->order_id);
+    	$items = $this->OrderItemModel->getOrderItemList($this->order_id);
+    	$bill_name_address = $this->NameAddressModel->getNameAddress($order['bill_name_address_id']);
+    	$ship_name_address = $this->NameAddressModel->getNameAddress($order['ship_name_address_id']);
+    	$shipping_cost = $this->ShippingModel->getShippingCostByCountry($ship_name_address['country_id']);
+    	
+    	//check command payment
+    	switch ($this->input->post('cmdPayment')){
+    		case 'payCreditCard':
+    			
+    			break;
+    		default:
+    		
+    			break;
     	}
-    	
-    	
     	
     	//load all neccesary main data
         $data['main'] = array(
-
-        				);
+							   'order_id'          => $this->order_id,
+        					   'order'             => $order,
+                               'items'	           => $items,
+        					   'shipping_cost'     => $shipping_cost,
+        					   'bill_name_address' => $bill_name_address,	
+        					   'ship_name_address' => $ship_name_address,
+        				     );
 
         //load page name
         $data['page'] = 'payment';
