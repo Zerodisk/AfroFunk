@@ -81,7 +81,8 @@ class Cart extends MY_Controller{
     			    	$this->session->set_userdata('db_order_id', $this->shoppingcart->getOrderId());
     			    }			    	
     					
-    				redirect('checkout');
+    				//redirect('checkout');
+    				header('Location: '.base_url().'checkout');
     			}
     			break;
     	}

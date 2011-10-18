@@ -49,7 +49,8 @@ class Checkout extends MY_Controller{
 				else{
 					//success validate						
 	    			$this->_saveOrder();		//save all name address or update if it's existed
-	    			redirect('confirm'); 		//redirect to confirm page
+	    			//redirect('payment'); 		//redirect to payment page
+	    			header('Location: '.base_url().'payment/?oid='.$this->order_id);
 				}   
 
 				$form_data = $this->_returnFormValue(TRUE);
