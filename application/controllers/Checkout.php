@@ -7,12 +7,11 @@ class Checkout extends MY_Controller{
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('OrderItemModel'); 
         $this->order_id = $this->session->userdata('db_order_id');	//get db_order_id from codeigniter session
         
         //redirect back to cart page if cart is empty
-        if ($this->_getNumberOfItem($this->order_id) <= 0){
-        	redirect('cart');			//cart empty
+        if (afro_getNumberOfItem($this->order_id) <= 0){
+        	header('Location: '.base_url().'cart');			//cart empty
         }       
         
         //load models and library
@@ -49,7 +48,6 @@ class Checkout extends MY_Controller{
 				else{
 					//success validate						
 	    			$this->_saveOrder();		//save all name address or update if it's existed
-	    			//redirect('payment'); 		//redirect to payment page
 	    			header('Location: '.base_url().'payment/?oid='.$this->order_id);
 				}   
 
@@ -212,15 +210,6 @@ class Checkout extends MY_Controller{
     	$this->form_validation->set_rules('shp_postcode'  , 'postcode'  , 'trim|required');
     	
     	$this->form_validation->set_error_delimiters('<span class="error" style="color:red;">', '</span>');
-    }
-    
-    /*
-     * return total number of item in order_item table for a given order_id
-     *    if $order_id == false mean there is no codeigniter session name db_order_id
-     */
-    private function _getNumberOfItem($order_id){
-    	if ($order_id == FALSE){return -1;}
-    	return $this->OrderItemModel->getNumberOfItem($order_id);
     }
     
     private function _getHeader(){

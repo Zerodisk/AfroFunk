@@ -18,10 +18,11 @@
 3. modify application/config/database.php to add all db connection value
 
 
-4. modify application/config/autoload.php to auto load the database class
+4. modify application/config/autoload.php to auto load the database class and some helper
 
     $autoload['libraries'] = array('database');
-    $autoload['helper'] = array('url');
+    $autoload['helper'] = array('url', 'afrofunk');		
+    //note: afrofunk_helper is our helper function for general shopping cart/checkout/payment
 
 5. modify application/config/config.php to setup the base url
 

@@ -6,7 +6,6 @@ class Cart extends MY_Controller{
         
         //load models and library
         $this->load->library('session');
-        
         //if there is db_order_id, use it as main order_id and cart type switch to db
         if ($this->session->userdata('db_order_id') != FALSE){
         	/*
@@ -81,7 +80,6 @@ class Cart extends MY_Controller{
     			    	$this->session->set_userdata('db_order_id', $this->shoppingcart->getOrderId());
     			    }			    	
     					
-    				//redirect('checkout');
     				header('Location: '.base_url().'checkout');
     			}
     			break;
@@ -97,7 +95,7 @@ class Cart extends MY_Controller{
     	}
     	
     	//get shipping cost by country_id
-    	$shipping = $this->_getShippingCost($shipping_country_id);
+    	$shipping = afro_getShippingCost($shipping_country_id);
     	$shipping_price = 0;
     	$shipping_item_id = 0;
     	if ($shipping != NULL){
@@ -164,7 +162,7 @@ class Cart extends MY_Controller{
     		$cus_item = array(
     							'product_id' 		 => $item['product_id'],
     							'product_name'		 => $item['product_name'],
-    							'product_name_extra' => $this->_getProductExtra($item['color_name'], $item['size_name']),
+    							'product_name_extra' => afro_getProductNameExtraInfo($item['color_name'], $item['size_name']),
     							'item_id'			 => $item['item_id'],
     							'qty'				 => $item['qty'],
     							'qty_options'		 => $this->_getQtyDropdown($item['qty_available']),
@@ -176,21 +174,7 @@ class Cart extends MY_Controller{
     	}
     	return $return;
     }
-    
-    //return extra production for size and color
-    private function _getProductExtra($color, $size){
-    	$return = '';
-    	if (isset($color) && isset($size)){
-    		$return = '(color: '.$color.' - size: '.$size.')';
-    	}
-    	else if(!isset($color) && isset($size)){
-    		$return = '(size: - '.$size.')';
-    	}
-    	else if(isset($color) && !isset($size)){
-    		$return = '(color - '.$color.')';
-    	}
-    	return $return;
-    }
+
     
     //return the drop down menu for max qty
     private function _getQtyDropdown($qty_available){
@@ -199,13 +183,6 @@ class Cart extends MY_Controller{
     		$options[$i] = $i;	
     	}
     	return $options;
-    }
-    
-    private function _getShippingCost($country_id){
-    	if ($country_id <= 0){return NULL;}
-    	$this->load->model('ShippingModel');
-    	$shipping = $this->ShippingModel->getShippingCostByCountry($country_id);
-    	return $shipping;
     }
     
     private function _getHeader(){

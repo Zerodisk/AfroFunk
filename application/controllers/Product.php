@@ -19,7 +19,7 @@ class Product extends MY_Controller{
     }
     
 	public function index(){
-		echo 'Product page';
+		redirect(base_url());
 	}
 	
 	public function view($product_id){
