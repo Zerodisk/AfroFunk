@@ -1,7 +1,7 @@
 <?php
 class Home extends MY_Controller{
 	
-    public function Home(){
+    public function __construct(){
         parent::__construct('admin');
         
         //load header+footer+title

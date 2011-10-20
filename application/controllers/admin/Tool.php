@@ -1,7 +1,7 @@
 <?php
 class Tool extends MY_Controller{
 	
-    public function Tool(){
+    public function __construct(){
         parent::__construct('admin');
     }	
     

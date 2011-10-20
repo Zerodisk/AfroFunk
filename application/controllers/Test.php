@@ -1,5 +1,5 @@
 <?php
-class Test extends CI_Controller{
+class Test extends MY_Controller{
     
     public function Test(){
         parent::__construct();
@@ -236,8 +236,6 @@ class Test extends CI_Controller{
     	$this->shoppingcart->emptyCart();
     }
     
-
-    
     public function updateOrderPrice($order_id){
     	$this->OrderModel->updateOrderPrice($order_id);
     }
@@ -247,7 +245,40 @@ class Test extends CI_Controller{
     	var_dump($countries);
     }
     
-    
+    public function ajax_test(){
+    	$result = array('result' => 'success',
+    					'data' => $this->input->get_post('item'),
+    	);
+    	echo(json_encode($result));
+/*
+ * //this will send request using post
+$(document).ready(function(){
+	$('#btnPayNow').click(function(){
+		$.post('<?=base_url()?>test/ajax_test', { 'item' : 'Tan Tang'}, 
+		function(data){
+			alert(data.result + ': ' + data.data);
+			if (data.result == 'success')
+				$('#item').prepend('<div style="color:blue">true-yes</div>');
+			else
+				$('#item').prepend('<div style="color:red">false-no</div>');
+		}, 'json');
+	});
+});
+ */
+    	
+/*
+ * //this will send request using get
+$(document).ready(function(){
+	$('#btnPayNow').click(function(){
+		$.getJSON('<?=base_url()?>test/ajax_test', { 'item' : 'Tan Tang'}, 
+			function(json){
+			alert(json.result + ': ' + json.data);
+			}
+		);	
+	});
+});
+ */
+    }
     
     
     

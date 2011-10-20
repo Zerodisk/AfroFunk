@@ -1,7 +1,7 @@
 <?php
 class Product extends MY_Controller{
 	
-    public function Product(){
+    public function __construct(){
         parent::__construct('admin');
             
         //load header+footer+title

@@ -1,7 +1,7 @@
 <?php
 class Report extends MY_Controller{
 	
-    public function Report(){
+    public function __construct(){
         parent::__construct('admin');
     }	
     

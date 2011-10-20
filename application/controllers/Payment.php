@@ -40,9 +40,16 @@ class Payment extends MY_Controller{
     	//check command payment
     	switch ($this->input->post('cmdPayment')){
     		case 'payCreditCard':
-    			
-    			
-    			
+    			//set form validation rule
+        		$this->_setValidationRule();   
+    			//validate all name address
+    			if ($this->form_validation->run() == FALSE){
+					//error validation
+				}
+				else{
+					//success validate						
+
+				}   
     			
     			break;
     		default:
@@ -58,9 +65,10 @@ class Payment extends MY_Controller{
         					   'shipping_cost'     => $shipping_cost,
         					   'bill_name_address' => $bill_name_address,	
         					   'ship_name_address' => $ship_name_address,
-        					   'cc_options_year'   => $this->CreditCardModel->getOptionsExpiryYear(-1, 'year'),
-        					   'cc_options_month'  => $this->CreditCardModel->getOptionsExpiryMonty(-1, 'month'),
-        					   'cc_cart_type'	   => $this->CreditCardModel->getOptionsCardType(),
+        					   'cc_options_year'   => $this->CreditCardModel->getOptionsExpiryYear('-1', 'year'),
+        					   'cc_options_month'  => $this->CreditCardModel->getOptionsExpiryMonty('-1', 'month'),
+        					   'cc_card_type'	   => $this->CreditCardModel->getOptionsCardType(),
+        					   'main_error_message'  => '<span class="error" style="color:red">There is an error, please see below in red text</span>',	
         				     );
 
         //load page name
@@ -74,6 +82,23 @@ class Payment extends MY_Controller{
     
     
     /*********************** private function ************************/
+    
+    /*
+     * set codeigniter validation rule
+     */
+    private function _setValidationRule(){
+    	$this->form_validation->set_rules('card_type'        ,'credit card type'            ,'required|exact_length[3]');
+		$this->form_validation->set_rules('card_number'      ,'credit card number'          ,'required|numeric|min_length[15]|max_length[20]');
+    	$this->form_validation->set_rules('card_cvv'         ,'credit card security number' ,'required|numeric|min_length[3]|max_length[4]');
+    	$this->form_validation->set_rules('card_holder_name' ,'credit card holder name'     ,'required');
+    	
+    	$this->form_validation->set_rules('card_month' ,'' , 'greater_than[0]');
+    	$this->form_validation->set_rules('card_year'  ,'' , 'greater_than[0]');
+    	$this->form_validation->set_message('greater_than', 'card expiry date is required');
+    
+    	$this->form_validation->set_error_delimiters('<span class="error" style="color:red;">', '</span>');
+    }    
+    
     private function _getHeader(){
     	return array(
                         'first'  => '1. first',

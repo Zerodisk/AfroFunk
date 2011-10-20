@@ -9,7 +9,7 @@ class CreditCardModel extends CI_Model{
    
     function getOptionsCardType(){
     	$card_type = array(
-    						'-1'  => 'select credit card type',
+    						''  => 'select credit card type',
     						'VSA' => 'Visa card',
 					    	'MSC' => 'Master card',
 					    	'AMX' => 'American Express card',

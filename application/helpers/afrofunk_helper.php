@@ -39,7 +39,7 @@ if ( ! function_exists('afro_getProductNameExtraInfo')){
 }
 
 if ( ! function_exists('afro_getFinalSalePrice')){
-	function afro_getFinalSalePrice($price, $price_dis_amt, $price_dis_per, $qty = 1){
+	function afro_getFinalSalePrice($price, $price_dis_amt = NULL, $price_dis_per = NULL, $qty = 1){
 		if ($price_dis_amt == NULL){$price_dis_amt = 0;}
 		if ($price_dis_per == NULL){$price_dis_per = 0;}
 		return ($price - $price_dis_amt - (($price - $price_dis_amt) * $price_dis_per / 100)) * $qty;

@@ -1,7 +1,7 @@
 <?php
 class Order extends MY_Controller{
 	
-    public function Order(){
+    public function __construct(){
         parent::__construct('admin');
         
         //load header+footer+title
