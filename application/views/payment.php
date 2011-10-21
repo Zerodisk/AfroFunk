@@ -13,7 +13,6 @@ function submitPayNow(){
 }
 
 function isFormValid(){
-	return true;
 	//do some simple form validation
 	if (document.frmPayment.card_type.selectedIndex == 0){
 		alert('select credit card type');
