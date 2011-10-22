@@ -19,3 +19,17 @@ body {
 	background: #aaa;
 	padding: 10px;
 }
+
+.payment_edit {
+	padding-top: 4px;
+	text-align: right;
+}
+
+label{
+	width: 8em;
+	float: left;
+	text-align: left;
+	margin-right: 0.5em;
+	display: block;
+	padding-top: 5px
+}

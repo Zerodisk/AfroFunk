@@ -28,15 +28,21 @@ function checkOut(){
 <!-- order_id = <?=$order_id ?> -->
 
 <form name="frmCart" action="<?= base_url().'cart' ?>" method="post">
+	<input type="hidden" name="order_id" value="<?=$order_id ?>" />
+	<input type="hidden" name="cmdCart" value="" />
+	<input type="hidden" name="item_id" value="" />
+	
 	<table>
+		<thead>
 		<tr>
 			<td colspan="2">product</td>
-			
 			<td>price each</td>
 			<td>qty</td>
 			<td>#</td>
 			<td>total price</td>
 		</tr>
+		</thead>
+		<tbody>
 		<?foreach($cart as $item){?>
 		  <tr>
 			<td><img src="<?=base_url().'product/photo/'.$item['product_id'] ?>" width="50" /></td>
@@ -57,26 +63,27 @@ function checkOut(){
 		    <td>total:</td>
 		    <td><?=$cart_total_price?></td>
 		  </tr>
+		</tbody>
 	</table>
 	
-	<br />
-	<div>shipping destination: <?=form_dropdown('shipping_country_id', $countries_options, $shipping_country_id)?></div>
-	
-	<br />
-	<div>shipping cost $<?=$shipping_price ?></div>
-	
-	<br />
-	<div>total price: $<?=($cart_total_price + $shipping_price) ?></div>
-	
-	<br />
-	<input type="hidden" name="order_id" value="<?=$order_id ?>" />
-	<input type="hidden" name="cmdCart" value="" />
-	<input type="hidden" name="item_id" value="" />
-	<input type="button" name="btnUpdateCart" value="update cart" onclick="updateCart()" />
-	&nbsp;
-	<?if ($cart_num_item > 0) {?>
-	<input type="button" name="btnCheckOut" value="check out" onclick="checkOut()" />
-	<?}?>
+	<p>
+		<label>shipping country:&nbsp;&nbsp;</label>
+		<?=form_dropdown('shipping_country_id', $countries_options, $shipping_country_id)?>
+	</p>
+	<p>
+		<label>shipping cost</label>
+		$<?=$shipping_price ?>
+	</p>
+	<p>
+		<label>total price:</label>
+		$<?=($cart_total_price + $shipping_price) ?>
+	</p>
+	<p>
+		<input type="button" name="btnUpdateCart" value="update cart" onclick="updateCart()" />
+		<?if ($cart_num_item > 0) {?>
+		<input type="button" name="btnCheckOut" value="check out" onclick="checkOut()" />
+		<?}?>
+	</p>
 </form>
 
 <p>&nbsp;</p>

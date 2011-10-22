@@ -46,15 +46,18 @@ function isFormValid(){
 </script>
 <div class="page">
 <div class="line">
-<div class="unit size3of5">
+<div class="unit size3of4">
     <h2>your order</h2>
     <table>
+    	<thead>
     	<tr>
     		<td>product</td>
     		<td>$each</td>
     		<td>qty</td>
     		<td>total</td>
     	</tr>
+    	</thead>
+    	<tbody>
     	<?
     	  $price_total = 0;
     	  foreach ($items as $item){
@@ -68,74 +71,64 @@ function isFormValid(){
     		<td><?=$price_each * $item['qty']?></td>
     	</tr>
     	<?}?>
+    	</tbody>
     </table>
-
 
 	<h2>payment details</h2>
 	<div>
 	<?if (strlen(validation_errors()) > 0){ 
-		echo($main_error_message);
+		echo('<p>'.$main_error_message.'</p>');
 	}?>
 	</div>
+	
 	<form name="frmPayment" action="<?= base_url().'payment' ?>" method="post">
 	   <input type="hidden" name="oid" value="<?=$order_id?>" />
 	   <input type="hidden" name="cmdPayment" value="" />
-	   <table>
-	      <tr>
-	   	  	<td>card type</td>
-	   	  	<td>
-	   	  	    <?=form_dropdown('card_type', $cc_card_type, set_value('card_type'),'id="card_type"')?>
-	   	  	    <?=form_error('card_type')?>
-	   	  	</td>
-	   	  </tr>
-	   	  <tr>
-	   	  	<td>card number</td>
-	   	  	<td>
-	   	  	   <input type="text" name="card_number" id="card_number" value="<?=set_value('card_number') ?>" />
-	   	  	   <?=form_error('card_number')?>
-	   	  	</td>
-	   	  </tr>
-	   	  <tr>
-	   	  	<td>security code</td>
-	   	  	<td>
-	   	  	   <input type="password" name="card_cvv" id="card_cvv" value="<?=set_value('card_cvv') ?>" />
-	   	  	   <?=form_error('card_cvv')?>
-	   	  	</td>
-	   	  </tr>
-	   	  <tr>
-	   	  	<td>expiry date</td>
-	   	  	<td>
-	   	  		<?=form_dropdown('card_month', $cc_options_month, set_value('card_month'), 'id="card_month"')?>
-	   	  			<?=form_error('card_month')?>
-	   	  		<?=form_dropdown('card_year', $cc_options_year, set_value('card_year'), 'id="card_year"')?>
-	   	  		    <?=form_error('card_year')?>
-	   	  	</td>
-	   	  </tr>
-	   	  
-	   	  <tr>
-	   	  	<td>card holder name</td>
-	   	  	<td>
-	   	  	   <input type="text" name="card_holder_name" id="card_holder_name" value="<?=set_value('card_holder_name') ?>" />
-	   	  	   <?=form_error('card_holder_name')?>
-	   	  	</td>
-	   	  </tr>
-	   </table>
-	   <input type="button" name="btnPayNow" id="btnPayNow" value="pay now" onclick="submitPayNow()" />
+	   
+	   <p>
+		   	<label for="card_type">card type</label>
+		   	<?=form_dropdown('card_type', $cc_card_type, set_value('card_type'),'id="card_type"')?>
+		   	<?=form_error('card_type')?>
+	   </p>
+	   <p>
+	   		<label for="card_number">card number</label>	
+	   		<input type="text" name="card_number" id="card_number" value="<?=set_value('card_number') ?>" />
+	   	  	<?=form_error('card_number')?>	
+	   </p>
+	   <p>
+	   		<label for="card_cvv">security code</label>
+	   		<input type="password" name="card_cvv" id="card_cvv" value="<?=set_value('card_cvv') ?>" maxlength="4" />
+	   	  	<?=form_error('card_cvv')?>
+	   </p>	  
+	   <p>
+	   		<label>expiry date</label>
+   	  		<?=form_dropdown('card_month', $cc_options_month, set_value('card_month'), 'id="card_month"')?>
+   	  			<?=form_error('card_month')?>
+   	  		<?=form_dropdown('card_year', $cc_options_year, set_value('card_year'), 'id="card_year"')?>
+   	  		    <?=form_error('card_year')?>	   		
+	   </p>
+	   <p>
+	   		<label for="card_holder_name">card holder name</label>
+	   		<input type="text" name="card_holder_name" id="card_holder_name" value="<?=set_value('card_holder_name') ?>" />
+	   	  	<?=form_error('card_holder_name')?>
+	   </p> 
+	   <p>
+	   		<input type="button" name="btnPayNow" id="btnPayNow" value="pay now" onclick="submitPayNow()" />
+	   </p>
 	</form>
+	
 </div>
-<div class="unit size1of5">
-	<p>&nbsp;</p>
-</div>
-<div class="unit size1of5 lastUnit">
+
+<div class="unit size1of4 lastUnit">
 	<div class="mod simple">
 		<b class="top">
 			<b class="tl"></b>
 			<b class="tr"></b>
 		</b>
-
 		<div class="inner">
 			<div class="hd">
-				<h3>billing address</h3>
+			    <div class="unit size3of4"><h3>billing address</h3></div>
+				<div class="unit size1of4 payment_edit"><h6><a href="<?=base_url().'checkout'?>">edit</a></h6></div>
 			</div>
 			<div class="db">
 			    <p>
@@ -144,12 +137,12 @@ function isFormValid(){
 			    <?=$bill_name_address['city'].', '.$bill_name_address['state'].' '.$bill_name_address['postcode']?><br />
 			    <?=$bill_name_address['country_name']?>
 			    <br /><br />
+			    email: <?=$order['email'] ?><br />
 			    phone: <?=$order['phone'] ?><br />
 			    mobile: <?=$order['mobile'] ?>
 			    </p>			
 			</div>
 		</div>	
- 		
 		<b class="bottom">
 			<b class="bl"></b>
 			<b class="br"></b>
@@ -163,7 +156,8 @@ function isFormValid(){
 		</b>
 		<div class="inner">
 			<div class="hd">
-				<h3>shipping address</h3>
+			    <div class="unit size3of4"><h3>shipping address</h3></div>
+				<div class="unit size1of4 payment_edit"><h6><a href="<?=base_url().'checkout'?>">edit</a></h6></div>
 			</div>
 			<div class="db">
 			    <p>
@@ -184,3 +178,4 @@ function isFormValid(){
 
 </div>
 </div>
+<p>&nbsp;</p>
