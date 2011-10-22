@@ -78,3 +78,5 @@ function checkOut(){
 	<input type="button" name="btnCheckOut" value="check out" onclick="checkOut()" />
 	<?}?>
 </form>
+
+<p>&nbsp;</p>

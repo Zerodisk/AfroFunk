@@ -12,7 +12,11 @@ function addCart(){
 
 <h1><?=$product['product_name'] ?></h1>
 
+<h3>description</h3>
 <p><?=$product['description'] ?></p>
+
+<h3>size description</h3>
+<p><?=$product['size_description'] ?></p>
 
 <form name="frmProduct" action="<?= base_url().'cart' ?>" method="post">
 	<input type="hidden" name="product_id" value="<?=$product['product_id'] ?>">
@@ -37,3 +41,4 @@ function addCart(){
 	<input type="button" name="btnAddCart" value="add cart" onclick="addCart();" />
 </form>
 
+<p>&nbsp;</p>

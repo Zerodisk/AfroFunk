@@ -42,11 +42,11 @@
 
 
 <h1>CategoryID: <?= $category_id ?> is <?= $category_name ?></h1>
-<div style="margin: 0 auto; width:870px;">
+<div class="line" >
 	<? foreach($products as $product){ ?>
-	<div style="border-style: dotted; border-width:1px; float:left; width: 200px; padding: 5px; margin-right: 5px; margin-bottom: 5px;">
+	<div class="unit size1of4">
 	    <a href="<?= $category_name.'/'.$product['product_id'] ?>">
-		<img src="<?=base_url()?>images/products/<?=$product['photo_filename'] ?>" width="100" height="120" style="float: top; border-style:solid; border-width: 1px; margin-bottom: 10px;" />
+		<img src="<?=base_url()?>images/products/<?=$product['photo_filename'] ?>" width="100" height="120" />
 	    </a>
 	    
 	    <div>Id: <?= $product['product_id']?></div>
@@ -59,5 +59,5 @@
 	</div>
 	<? } ?>
 </div>  
-<div style="height: 10px; clear: left;"></div>
+
 

@@ -44,7 +44,9 @@ function isFormValid(){
 
 //-->
 </script>
-<div id="your_order" style="float:left">
+<div class="page">
+<div class="line">
+<div class="unit size3of5">
     <h2>your order</h2>
     <table>
     	<tr>
@@ -121,25 +123,64 @@ function isFormValid(){
 	   <input type="button" name="btnPayNow" id="btnPayNow" value="pay now" onclick="submitPayNow()" />
 	</form>
 </div>
+<div class="unit size1of5">
+	<p>&nbsp;</p>
+</div>
+<div class="unit size1of5 lastUnit">
+	<div class="mod simple">
+		<b class="top">
+			<b class="tl"></b>
+			<b class="tr"></b>
+		</b>
 
-<div style="float:right">
-	<div id="your_billing">
-	    <h2>billing address</h2>
-		    <?=$bill_name_address['first_name'].' '.$bill_name_address['last_name']?><br />
-		    <?=$bill_name_address['address_1'].'  '.$bill_name_address['address_2']?><br />
-		    <?=$bill_name_address['city'].', '.$bill_name_address['state'].' '.$bill_name_address['postcode']?><br />
-		    <?=$bill_name_address['country_name']?>
+		<div class="inner">
+			<div class="hd">
+				<h3>billing address</h3>
+			</div>
+			<div class="db">
+			    <p>
+			    <?=$bill_name_address['first_name'].' '.$bill_name_address['last_name']?><br />
+			    <?=$bill_name_address['address_1'].'  '.$bill_name_address['address_2']?><br />
+			    <?=$bill_name_address['city'].', '.$bill_name_address['state'].' '.$bill_name_address['postcode']?><br />
+			    <?=$bill_name_address['country_name']?>
+			    <br /><br />
+			    phone: <?=$order['phone'] ?><br />
+			    mobile: <?=$order['mobile'] ?>
+			    </p>			
+			</div>
+		</div>	
+ 		
+		<b class="bottom">
+			<b class="bl"></b>
+			<b class="br"></b>
+		</b>
 	</div>
 	
-	<div id="your_shipping">
-	    <h2>shipping address</h2>
-		    <?=$ship_name_address['first_name'].' '.$ship_name_address['last_name']?><br />
-		    <?=$ship_name_address['address_1'].'  '.$ship_name_address['address_2']?><br />
-		    <?=$ship_name_address['city'].', '.$ship_name_address['state'].' '.$ship_name_address['postcode']?><br />
-		    <?=$ship_name_address['country_name']?>
-		     
+	<div class="mod simple">
+		<b class="top">
+			<b class="tl"></b>
+			<b class="tr"></b>
+		</b>
+		<div class="inner">
+			<div class="hd">
+				<h3>shipping address</h3>
+			</div>
+			<div class="db">
+			    <p>
+				<?=$ship_name_address['first_name'].' '.$ship_name_address['last_name']?><br />
+			    <?=$ship_name_address['address_1'].'  '.$ship_name_address['address_2']?><br />
+			    <?=$ship_name_address['city'].', '.$ship_name_address['state'].' '.$ship_name_address['postcode']?><br />
+			    <?=$ship_name_address['country_name']?>
+			    </p>			
+			</div>
+		</div>	
+		<b class="bottom">
+			<b class="bl"></b>
+			<b class="br"></b>
+		</b>   
 	</div>
 	<p>&nbsp;</p>
 </div>
 
-
+</div>
+</div>
