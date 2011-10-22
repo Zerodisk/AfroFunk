@@ -30,9 +30,10 @@ a{
 #menu-top {
 	clear: both;
 	background: #ff0000;	
-	padding: 10px;
+	padding: 1px;
 	text-decoration: none;
 	text-align: center;
+	width: 714px;
 }
 
 .menu{

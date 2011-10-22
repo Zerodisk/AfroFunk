@@ -9,5 +9,8 @@
 
 
 <!-- load global style sheet -->
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/oocss/libraries.css" />
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/oocss/content.css" />
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>css/site_layout.css" />
+
  
