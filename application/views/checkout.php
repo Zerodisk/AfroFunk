@@ -31,7 +31,7 @@ function isFormValid(){
 }
 //-->
 </script>
-
+<br />
 <h1>check out page</h1>
 <div>
 	<?if (strlen(validation_errors()) > 0){ 

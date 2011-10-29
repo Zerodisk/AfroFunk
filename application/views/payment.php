@@ -1,4 +1,3 @@
-<h1>this is payment page</h1>
 <script type="text/javascript">
 <!--
 
@@ -47,32 +46,70 @@ function isFormValid(){
 <div class="page">
 <div class="line">
 <div class="unit size3of4">
-    <h2>your order</h2>
-    <table>
-    	<thead>
-    	<tr>
-    		<td>product</td>
-    		<td>$each</td>
-    		<td>qty</td>
-    		<td>total</td>
-    	</tr>
-    	</thead>
-    	<tbody>
-    	<?
-    	  $price_total = 0;
-    	  foreach ($items as $item){
-    	    $price_each = afro_getFinalSalePrice($item['price'], $item['price_discount_amt'], $item['price_discount_percent']);
-    	    $price_total = $price_total + ($price_each * $item['qty']);
-    	?>
-    	<tr>
-    		<td><?=$item['product_name'].'  '.afro_getProductNameExtraInfo($item['color_name'], $item['size_name'])?></td>
-    		<td><?=$price_each?></td>
-    		<td><?=$item['qty']?></td>
-    		<td><?=$price_each * $item['qty']?></td>
-    	</tr>
-    	<?}?>
-    	</tbody>
-    </table>
+	<br />
+    <h2>order summary</h2>
+    <br />
+    
+    <div class="table_head">
+	    <div class="unit size2of3">
+	    	<div class="unit size3of5">
+	    		&nbsp;&nbsp;&nbsp;product
+	    	</div>
+	    	<div class="unit size2of5">
+	    		<div class="unit size1of3 amount">$ each</div>
+	    		<div class="unit size1of3 amount">qty</div>
+	    		<div class="unit size1of3 amount">total</div>
+	    	</div>
+	    </div>
+	    <div class="unit size1of3">&nbsp;</div>
+    </div>
+    <?
+    $price_total = 0;
+    foreach ($items as $item){
+    	$price_each = afro_getFinalSalePrice($item['price'], $item['price_discount_amt'], $item['price_discount_percent']);
+    	$price_total = $price_total + ($price_each * $item['qty']);
+    ?>
+    <div>
+	    <div class="unit size2of3">
+	    	<div class="unit size3of5">
+	    		&nbsp;&nbsp;&nbsp;<?=$item['product_name'].'  '.afro_getProductNameExtraInfo($item['color_name'], $item['size_name'])?>
+	    	</div>
+	    	<div class="unit size2of5">
+	    		<div class="unit size1of3 amount">$<?=$price_each?></div>
+	    		<div class="unit size1of3 amount"><?=$item['qty']?></div>
+	    		<div class="unit size1of3 amount">$<?=$price_each * $item['qty']?></div>
+	    	</div>
+	    </div>
+	    <div class="unit size1of3 lastUnit">&nbsp;</div>
+    </div>
+    <?}?>
+    <div>
+	    <div class="unit size2of3">
+	    	<div class="unit size3of5">
+	    		&nbsp;&nbsp;&nbsp;shipping cost
+	    	</div>
+	    	<div class="unit size2of5">
+	    		<div class="unit size2of3">&nbsp;</div>
+	    		<div class="unit size1of3 amount_last">$<?=$shipping_cost['price'] ?></div>
+	    	</div>
+	    </div>
+	    <div class="unit size1of3">&nbsp;</div>
+    </div>
+    <div class="table_foot">
+	    <div class="unit size2of3">
+	    	<div class="unit size3of5">
+	    		&nbsp;&nbsp;&nbsp;total amount
+	    	</div>
+	    	<div class="unit size2of5">
+	    		<div class="unit size2of3">&nbsp;</div>
+	    		<div class="unit size1of3 amount_total">$<?=$price_total + $shipping_cost['price'] ?></div>
+	    	</div>
+	    </div>
+	    <div class="unit size1of3">&nbsp;</div>
+    </div>
+    
+    <p>&nbsp;</p>
+	
 
 	<h2>payment details</h2>
 	<div>
@@ -120,6 +157,7 @@ function isFormValid(){
 </div>
 
 <div class="unit size1of4 lastUnit">
+	<br />
 	<div class="mod simple">
 		<b class="top">
 			<b class="tl"></b>
