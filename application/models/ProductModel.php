@@ -7,27 +7,29 @@ class ProductModel extends CI_Model{
         parent::__construct();
     }
     
-    //function return list of product by a given category_id
+    /*
+     * function return list of product by a given category_id
+     *   only show product that have
+     *    - active product status
+     *    - got stock available for sale
+     *   use on public-category page
+     */
     function getProductListByCategoryId($category_id, 
-    									$active_only 	 = TRUE, 
-    									$order_by 		 = 'date_created', 
-    									$order_direction = 'DESC', 
-    									$limit 			 = null){
+    									$record_index    = 0,
+    									$limit			 = 999999){
     									
-    	$sql_extra = '';
-    	if ($active_only){
-    		$sql_extra = ' and p.is_active = 1 ';
-    	}
         $sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
-        	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename 
-        	    from product p left join photo o on (p.product_id = o.product_id and o.is_main = 1) 
-        	    where p.category_id = ?'.$sql_extra;
+        	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
+                   sum(i.qty) as qty
+        	    from product p inner join item i on p.product_id = i.product_id 
+                    left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
+        	    where p.category_id = ? and p.is_active = 1
+                    group by p.product_id
+        			having sum(i.qty) > 0';
         
-        $sql = $sql.' order by p.'.$this->db->escape_str($order_by).' '.$this->db->escape_str($order_direction);
-        
-        if($limit != null)
-        	$sql = $sql.' limit '.$limit;
+        //do limit record
+        $sql = $sql.' limit '.$record_index.', '.$limit;
         
         $query = $this->db->query($sql, array($category_id));
         $data = $query->result_array();
@@ -35,6 +37,33 @@ class ProductModel extends CI_Model{
         $query->free_result();  
         return $data; 
     }
+    
+    /*
+     * function return list of product by keyword search
+     *   use on admin product search page
+     */
+    function getProductListForAdminSearch($keyword,
+        								  $record_index    = 0,
+    									  $limit		   = 999999){
+    	$sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
+        	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
+        	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
+                  ifnull(sum(i.qty), 0) as qty
+        	    from product p left join item i on p.product_id = i.product_id 
+                    left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
+        	    where p.product_name like "%?%"
+                    group by p.product_id';
+    	
+    	//do limit record
+    	$sql = $sql.' limit '.$record_index.', '.$limit;
+    	
+    	$query = $this->db->query($sql, array($keyword));
+    	$data = $query->result_array();
+    	
+    	$query->free_result();
+    	return $data;
+    }
+    
     
     //function return product by a given product_id
     function getProductById($product_id, $active_only = TRUE){

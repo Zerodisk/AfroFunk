@@ -29,7 +29,7 @@ class Category extends MY_Controller{
         $category_photos = $this->CategoryPhotoModel->getPhotosByCategoryId($category_id);
         
         //load photos for a given category
-        $products = $this->ProductModel->getProductListByCategoryId($category_id, TRUE, 'date_created', 'ASC', 30);
+        $products = $this->ProductModel->getProductListByCategoryId($category_id);
         
         //load all neccesary main data
         $data['main'] = array(
