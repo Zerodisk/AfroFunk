@@ -10,13 +10,17 @@ class ItemModel extends CI_Model{
 
     //return list of items for a given product_id
     public function getItemList($product_id, $active_only = TRUE){
+    	$sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and i.is_active = 1 ';
+    	}
+    	
     	$sql = 'select i.item_id, i.qty, i.weight, i.date_created, i.date_modified,
 				i.color_id, c.color_name, i.size_id, s.size_name
 				from item i left join size s on i.size_id = s.size_id
 					left join color c on i.color_id = c.color_id
-				where i.product_id = ?
-				and i.is_active = ?';
-    	$query = $this->db->query($sql, array($product_id, ($active_only) ? 1 : 0));
+				where i.product_id = ? '.$sql_extra;
+    	$query = $this->db->query($sql, array($product_id));
         $data = $query->result_array();
         
         $query->free_result();  
@@ -25,15 +29,18 @@ class ItemModel extends CI_Model{
     
     //return a single item for a given item_id
     public function getItem($item_id, $active_only = TRUE){
+    	$sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and i.is_active = 1 ';
+    	}
     	$sql = 'select i.item_id, i.qty, i.weight, i.date_created, i.date_modified,
 				i.color_id, c.color_name, i.size_id, s.size_name,
 				p.product_id, p.product_name, p.price, p.price_discount_amt, (p.price - p.price_discount_amt) as price_sell
 				from item i inner join product p on i.product_id = p.product_id
 				    left join size s on i.size_id = s.size_id
 					left join color c on i.color_id = c.color_id
-				where i.item_id = ?
-				and i.is_active = ?';
-    	$query = $this->db->query($sql, array($item_id, ($active_only) ? 1 : 0));
+				where i.item_id = ? '.$sql_extra;
+    	$query = $this->db->query($sql, array($item_id));
         $data = $query->row_array();
         
         $query->free_result();  

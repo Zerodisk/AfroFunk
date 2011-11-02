@@ -5,7 +5,7 @@ body {
 	background: #ffffff;
 }
 
-a{
+a:hover{
 	text-decoration: none;
 	font-style: normal;
 }
@@ -20,6 +20,11 @@ a{
 	background: #ccc;
 }
 
+#content{
+	width: 920px;
+	margin: 0 auto;	
+}
+
 #footer {
 	clear: both;
 	background: #aaa;
@@ -27,13 +32,14 @@ a{
 	text-align: center;
 }
 
-#menu-top {
+.menu-top {
 	clear: both;
 	background: #ff0000;	
 	padding: 1px;
 	text-decoration: none;
 	text-align: center;
-	width: 714px;
+	width: 740px;
+	height: 38px;
 }
 
 .menu{
@@ -43,6 +49,10 @@ a{
 	margin: 1px;
 }
 
+.menu:hover{
+	background: #eee;
+}
+
 .menu-selected{
 	font-weight: bold;
 	background: #cccccc;
@@ -50,3 +60,60 @@ a{
 	width: 100px;
 	margin: 1px;
 }
+
+
+.tab_header ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+   }
+
+.tab_header li {
+	float: left;
+	border: 1px solid #bbb;
+	border-bottom-width: 0;
+	margin: 0;
+   }
+
+.tab_header a {
+	text-decoration: none;
+	display: block;
+	background: #eee;
+	padding: 0.24em 1em;
+	color: #00c;
+	width: 8em;
+	text-align: center;
+   }
+
+.tab_header a:hover {
+	background: #ddf;
+}
+
+.tab_header #selected {
+	border-color: black;
+}
+
+.tab_header #selected a {
+	position: relative;
+	top: 1px;
+	background: white;
+	color: black;
+	font-weight: bold;
+}
+
+.tab_content {
+	border: 1px solid black;
+	clear: both;
+	padding: 0 1em;
+}
+
+label_search{
+	width: 9em;
+	float: left;
+	text-align: left;
+	margin-right: 0.5em;
+	display: block;
+	padding-top: 0px
+}
+
+

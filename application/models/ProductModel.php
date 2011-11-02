@@ -44,7 +44,9 @@ class ProductModel extends CI_Model{
      */
     function getProductListForAdminSearch($keyword,
         								  $record_index    = 0,
-    									  $limit		   = 999999){
+    									  $limit		   = 999999,
+    									  $orderby		   = 'p.product_name',
+    									  $direction	   = 'ASC'){
     	$sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
         	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
@@ -54,6 +56,8 @@ class ProductModel extends CI_Model{
         	    where p.product_name like "%?%"
                     group by p.product_id';
     	
+    	//do order by
+    	$sql = $sql.' order by '.$orderby.' '.$direction;
     	//do limit record
     	$sql = $sql.' limit '.$record_index.', '.$limit;
     	
