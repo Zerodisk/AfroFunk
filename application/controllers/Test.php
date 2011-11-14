@@ -280,6 +280,11 @@ $(document).ready(function(){
  */
     }
     
+    public function ajax_test2(){
+    	$products = $this->ProductModel->getProductListForAdminSearch('*');
+    	echo(json_encode($products));
+    }
+    
     
     
     

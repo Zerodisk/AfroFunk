@@ -53,7 +53,7 @@ class ProductModel extends CI_Model{
                   ifnull(sum(i.qty), 0) as qty
         	    from product p left join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
-        	    where p.product_name like "%?%"
+        	    where p.product_name like ?
                     group by p.product_id';
     	
     	//do order by
@@ -61,10 +61,18 @@ class ProductModel extends CI_Model{
     	//do limit record
     	$sql = $sql.' limit '.$record_index.', '.$limit;
     	
+    	if ($keyword == '*'){
+    		$keyword = '%';
+    	}
+    	
+    	if ($keyword != '%'){
+    		$keyword = '%'.$keyword.'%';
+    	}    	
+    	
     	$query = $this->db->query($sql, array($keyword));
     	$data = $query->result_array();
     	
-    	$query->free_result();
+    	$query->free_result();  	
     	return $data;
     }
     
