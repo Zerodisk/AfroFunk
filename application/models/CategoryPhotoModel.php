@@ -13,9 +13,14 @@ class CategoryPhotoModel extends CI_Model{
     
     //function return all photo category slice by a given category_id
     function getPhotosByCategoryId($category_id, $active_only = TRUE){
-        $sql = 'select * from category_photo_slice where category_id = ? and is_active = ? order by weight ASC';  
+        $sql_extra = '';
+    	if ($active_only){
+    		$sql_extra = ' and is_active = 1 ';
+    	}
+    	
+        $sql = 'select * from category_photo_slice where category_id = ? '.$sql_extra.' order by weight ASC';  
             
-        $query = $this->db->query($sql, array($category_id, ($active_only) ? 1 : 0));
+        $query = $this->db->query($sql, array($category_id));
         $data = $query->result_array();
         
         $query->free_result();  
