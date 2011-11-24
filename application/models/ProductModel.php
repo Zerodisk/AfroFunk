@@ -24,7 +24,9 @@ class ProductModel extends CI_Model{
                    sum(i.qty) as qty
         	    from product p inner join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
-        	    where p.category_id = ? and p.is_active = 1
+        	    where p.category_id = ? 
+        	    and p.is_active = 1
+        	    and p.product_id > 0
                     group by p.product_id
         			having sum(i.qty) > 0';
         
@@ -54,6 +56,7 @@ class ProductModel extends CI_Model{
         	    from product p left join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
         	    where p.product_name like ?
+        	        and p.product_id > 0
                     group by p.product_id';
     	
     	//do order by

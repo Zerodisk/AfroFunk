@@ -1,3 +1,52 @@
+<script type="text/javascript">
+<!--
+
+var record_index = 0;
+var limit = 50;
+
+$(document).ready(function(){
+	$('#btnSearchSubmit').click(function(){
+		var keyword = $('#txtSearchKeyword').val();
+		$.getJSON('<?=base_url()?>admin/product/ajax_search', { 'keyword' : keyword, 'record_index' : record_index, 'limit': limit}, 
+			function(json){
+	                if (json.status){
+		                if (json.data.length > 0){
+							$('#no_result').hide();
+							clearSearchResult();
+			                for (var i = 0;i <= json.data.length - 1;i++){
+								$('#items').append(returnSearchResultItem(json.data[i]));
+			                }	
+		                }
+		                else{
+		                	showNoResultFound();
+		                }		                	        
+	                }   
+	                else{
+	                	showNoResultFound();
+	                }
+			}
+		);	
+	});
+});
+
+function returnSearchResultItem(product){
+
+	return '<div style="color:blue"><span>' + product.product_id + '</span><span>' + product.product_name + '</span></div>';
+	
+}
+
+function clearSearchResult(){
+	$('#items').empty();
+}
+
+function showNoResultFound(){
+	clearSearchResult();
+	$('#no_result').show();
+}
+
+//-->
+</script>
+
 <div class="tab_header">
 	<h1>Product</h1>
 	<br />
@@ -16,7 +65,7 @@
 		  <p>
 			<label_search>keyword:</label_search>
 			<input type="text" name="txtSearchKeyword" id="txtSearchKeyword" value="" />
-			<input type="submit" name="btnSearchSubmit" value="  search  " />
+			<input type="button" name="btnSearchSubmit" id="btnSearchSubmit" value="  search  " />
 		  </p>
 		<br />
 	</form>
@@ -32,5 +81,8 @@
 	</ul>
 </div>
 <div class="tab_content">
-	<br />&nbsp;&nbsp;&nbsp;no result found<br /><br /><br />
+	<br />
+	<div id="no_result">&nbsp;&nbsp;&nbsp;no result found</div>
+	<div id="items"></div>
+	<br /><br />
 </div>

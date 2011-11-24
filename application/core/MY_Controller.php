@@ -62,6 +62,28 @@ class MY_Controller extends CI_Controller{
     	            );
     }
     
+    /*
+     *  function return json
+     *   - set content type, json encoding and return json data
+     *  
+     *  2 input parameters
+     *   - $status = true meaning success request/response, then check data
+     *             = false meaning fail request or response, no need to check for data 
+     *               (but you can check for error_code or error_description)
+     *   - $data   = the actual data, it can be array or object
+     */ 
+    public function echoJson($status, $object = NULL){
+    	$this->output->set_header("Content-Type: application/json");
+    	
+    	$result = new jsonData();
+    	
+    	$result->status = $status;
+    	if ($result->status)
+    		$result->data = $object;
+    	
+    	echo(json_encode($result));
+    }
+    
     
     
     
@@ -83,4 +105,18 @@ class MY_Controller extends CI_Controller{
     }
 
     
+}
+
+/*
+ * data structure for json response
+ * - status				= boolean indicate the status of request/response
+ * - data				= the actual, only return in status = TRUE
+ * - error_code			= code of error
+ * - error_description  = error text description
+ */
+class jsonData{
+	public $status;
+	public $data;
+	public $error_code;
+	public $error_description;
 }

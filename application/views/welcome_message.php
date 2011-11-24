@@ -42,6 +42,32 @@ code {
 }
 
 </style>
+
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.6.1.min.js"></script>
+<script>
+
+$(document).ready(function(){
+	$('#btnPayNow').click(function(){
+		var key = $('#txtKeyword').val();
+		$.getJSON('<?=base_url()?>test/ajax_test2', { 'keyword' : key, 'test' : '123'}, 
+			function(json){
+
+	                if (json.status == true){
+		                alert('ajax success');
+		                for (var i = 0;i <= json.data.length - 1;i++){
+							alert(json.data[i].product_id + ': ' + json.data[i].product_name);
+		                }		             
+	                }   
+	                else{
+	                	alert('search not found');  
+	                }
+	            
+			}
+		);	
+	});
+});
+
+</script>
 </head>
 <body>
 
@@ -59,6 +85,9 @@ code {
 
 
 <p><br />Page rendered in {elapsed_time} seconds</p>
+
+<input type="text" name="txtKeyword" id="txtKeyword" value="*" />
+<input type="button" name="btnPayNow" id="btnPayNow" value="Search Now!" />
 
 </body>
 </html>

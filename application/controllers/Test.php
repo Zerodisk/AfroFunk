@@ -258,9 +258,9 @@ $(document).ready(function(){
 		function(data){
 			alert(data.result + ': ' + data.data);
 			if (data.result == 'success')
-				$('#item').prepend('<div style="color:blue">true-yes</div>');
+				$('#item').append('<div style="color:blue">true-yes</div>');
 			else
-				$('#item').prepend('<div style="color:red">false-no</div>');
+				$('#item').append('<div style="color:red">false-no</div>');
 		}, 'json');
 	});
 });
@@ -270,7 +270,7 @@ $(document).ready(function(){
  * //this will send request using get
 $(document).ready(function(){
 	$('#btnPayNow').click(function(){
-		$.getJSON('<?=base_url()?>test/ajax_test', { 'item' : 'Tan Tang'}, 
+		$.getJSON('<?=base_url()?>test/ajax_test', { 'item' : 'Tan Tang', 'item2':'value2'}, 
 			function(json){
 			alert(json.result + ': ' + json.data);
 			}
@@ -281,8 +281,11 @@ $(document).ready(function(){
     }
     
     public function ajax_test2(){
-    	$products = $this->ProductModel->getProductListForAdminSearch('*');
-    	echo(json_encode($products));
+    	$keyword = $this->input->get_post('keyword');    	
+    	$products = $this->ProductModel->getProductListForAdminSearch($keyword);
+    	
+    	$helper = new MY_Controller();
+    	$helper->echoJson(TRUE, $products);
     }
     
     
