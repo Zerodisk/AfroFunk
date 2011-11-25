@@ -30,7 +30,7 @@ class Product extends MY_Controller{
     	$keyword 	  = $this->input->get_post('keyword');
     	$record_index = $this->input->get_post('record_index');
     	$limit 		  = $this->input->get_post('limit');
-    	
+
     	//query and return as json
     	$products = $this->ProductModel->getProductListForAdminSearch($keyword, $record_index, $limit);
 		$this->echoJson(TRUE, $products);

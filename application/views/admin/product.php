@@ -6,6 +6,7 @@ var limit = 50;
 
 $(document).ready(function(){
 	$('#btnSearchSubmit').click(function(){
+		$('#ajax_waiting').show();
 		var keyword = $('#txtSearchKeyword').val();
 		$.getJSON('<?=base_url()?>admin/product/ajax_search', { 'keyword' : keyword, 'record_index' : record_index, 'limit': limit}, 
 			function(json){
@@ -16,6 +17,7 @@ $(document).ready(function(){
 			                for (var i = 0;i <= json.data.length - 1;i++){
 								$('#items').append(returnSearchResultItem(json.data[i]));
 			                }	
+			                $('#ajax_waiting').hide();
 		                }
 		                else{
 		                	showNoResultFound();
@@ -42,6 +44,7 @@ function clearSearchResult(){
 function showNoResultFound(){
 	clearSearchResult();
 	$('#no_result').show();
+	$('#ajax_waiting').hide();
 }
 
 //-->
@@ -84,5 +87,6 @@ function showNoResultFound(){
 	<br />
 	<div id="no_result">&nbsp;&nbsp;&nbsp;no result found</div>
 	<div id="items"></div>
+	<div id="ajax_waiting" class="product_search_wait" style="display:none;"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>
 	<br /><br />
 </div>
