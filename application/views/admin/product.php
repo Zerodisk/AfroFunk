@@ -28,6 +28,7 @@ $(document).ready(function(){
 	                }
 			}
 		);	
+		return false;
 	});
 });
 
@@ -68,7 +69,7 @@ function showNoResultFound(){
 		  <p>
 			<label_search>keyword:</label_search>
 			<input type="text" name="txtSearchKeyword" id="txtSearchKeyword" value="" />
-			<input type="button" name="btnSearchSubmit" id="btnSearchSubmit" value="  search  " />
+			<input type="submit" name="btnSearchSubmit" id="btnSearchSubmit" value="  search  " />
 		  </p>
 		<br />
 	</form>
