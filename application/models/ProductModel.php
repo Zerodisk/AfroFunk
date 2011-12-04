@@ -52,7 +52,7 @@ class ProductModel extends CI_Model{
     	$sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
         	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
-                  ifnull(sum(i.qty), 0) as qty
+                   ifnull(sum(i.qty), 0) as qty, count(i.item_id) as num_items
         	    from product p left join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
         	    where p.product_name like ?

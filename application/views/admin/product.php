@@ -3,39 +3,63 @@
 
 var record_index = 0;
 var limit = 50;
+var keyword;
+var noMoreResult = false;
 
 $(document).ready(function(){
+	$('#txtSearchKeyword').focus();
+	
 	$('#btnSearchSubmit').click(function(){
-		$('#ajax_waiting').show();
-		var keyword = $('#txtSearchKeyword').val();
-		$.getJSON('<?=base_url()?>admin/product/ajax_search', { 'keyword' : keyword, 'record_index' : record_index, 'limit': limit}, 
-			function(json){
-	                if (json.status){
-		                if (json.data.length > 0){
-							$('#no_result').hide();
-							clearSearchResult();
-			                for (var i = 0;i <= json.data.length - 1;i++){
-								$('#items').append(returnSearchResultItem(json.data[i]));
-			                }	
-			                $('#ajax_waiting').hide();
-		                }
-		                else{
-		                	showNoResultFound();
-		                }		                	        
-	                }   
-	                else{
-	                	showNoResultFound();
-	                }
-			}
-		);	
+		noMoreResult = false;
+		clearSearchResult();
+		record_index = 0;
+		keyword = $('#txtSearchKeyword').val();
+		loadSearch();
 		return false;
 	});
+
 });
 
-function returnSearchResultItem(product){
+function showItemList(product_id){
+	var targetTag = '#item_' + product_id;
+	$.getJSON('<?=base_url()?>admin/product/ajax_getItemList', { 'product_id' : product_id }, 
+		function(json){
+            if (json.data.length > 0){
+				$(targetTag).append('<div>');
+	            for (var i = 0;i <= json.data.length - 1;i++){
+					$(targetTag).append(returnItemList(json.data[i]));
+	            }	
+	            $(targetTag).append('</div>');
+            }
+            else{
+              	alert('no items found');
+            }		                	  
+            //$('#linkShowItem_' + product_id).hide();      
+		}
+	);	
+}
 
-	return '<div style="color:blue"><span>' + product.product_id + '</span><span>' + product.product_name + '</span></div>';
+function returnSearchResultItem(product){
+	var li_start = '<li class="product_search_list">';
+	var photo    = li_start + '<img height="100" src="<?=base_url().'images/products/'?>' + product.photo_filename + '" /></li>';
+	var id       = li_start + product.product_id + '</li>';
+	var name     = li_start + '<a href="product/view/' + product.product_id + '">' + product.product_name + '</a></li>';
+	var price    = li_start + '$' + product.price + '</li>';
+	var qty      = li_start + product.qty + '</li>';
+	var options  = li_start + '<a href="javascript:showItemList(' + product.product_id + ')" id="linkShowItem_' + product.product_id + '">show items</a></li>';
 	
+	return '<ul class="product_search_top">'
+			 + photo + id + name + price + qty + options 
+			 + '</ul><div id="item_' + product.product_id + '"></div>';
+	
+}
+
+function returnItemList(item){
+
+	
+	return item.color_name;
+
+
 }
 
 function clearSearchResult(){
@@ -43,10 +67,45 @@ function clearSearchResult(){
 }
 
 function showNoResultFound(){
-	clearSearchResult();
 	$('#no_result').show();
 	$('#ajax_waiting').hide();
 }
+
+function loadSearch(){
+	$('#ajax_waiting').show();
+	$.getJSON('<?=base_url()?>admin/product/ajax_search', { 'keyword' : keyword, 'record_index' : record_index, 'limit': limit}, 
+		function(json){
+            if (json.status){
+	             if (json.data.length > 0){
+					$('#no_result').hide();					
+					$('#items').append('<div>');
+		            for (var i = 0;i <= json.data.length - 1;i++){
+						$('#items').append(returnSearchResultItem(json.data[i]));
+		            }	
+		            $('#items').append('</div>');
+		            $('#linkLoadMoreResult').show();
+	             }
+	             else{
+	            	noMoreResult = true;
+	               	if (record_index == 0) {showNoResultFound();}
+	             }		                	        
+            }   
+            else{
+            	noMoreResult = true;
+            	if (record_index == 0) {showNoResultFound();}
+            }
+		}
+	);	
+	$('#ajax_waiting').hide();	
+}
+
+function loadMoreResult(){
+	record_index = record_index + limit;
+	loadSearch();
+	if (noMoreResult){$('#linkLoadMoreResult').hide();}
+}
+
+
 
 //-->
 </script>
@@ -57,9 +116,8 @@ function showNoResultFound(){
 	<ul>
 		<li id="selected"><a href="#">Search</a></li>
 		<!--  
-		<li><a href="#">This</a></li>
-		<li><a href="#">The Other</a></li>
-		<li><a href="#">Banana</a></li>
+		<li><a href="#">tab 1</a></li>
+		<li><a href="#">tab 2</a></li>
 		-->
 	</ul>
 </div>
@@ -90,4 +148,6 @@ function showNoResultFound(){
 	<div id="items"></div>
 	<div id="ajax_waiting" class="product_search_wait" style="display:none;"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>
 	<br /><br />
+	<div id="linkLoadMoreResult" style="display:none;text-align:right"><a href="javascript:loadMoreResult()">load more...</a></div>
 </div>
+

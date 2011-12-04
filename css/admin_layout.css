@@ -121,4 +121,19 @@ label_search{
 	margin-left: 410px;
 }
 
+.product_search_top {
+	clear: both;
+	padding: 1px;
+	text-decoration: none;
+	text-align: center;
+	width: 740px;
+	height: 135px;
+}
+
+.product_search_list{
+	background: #ffffff;
+	float: left;
+	width: 120px;
+	margin: 1px;
+}
 
