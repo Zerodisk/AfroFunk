@@ -13,6 +13,7 @@
 	</ul>
 </div>
 <div class="tab_content">
+	<div style="float:right"><a href="#">new product</a></div>
 	<br />
 	  <p>
 		show product details here
@@ -29,8 +30,9 @@
 	</ul>
 </div>
 <div class="tab_content">
+	<div style="float:right"><a href="#">add item</a></div>
 	<br />
-	  <p>
+	  <p id="item_list">
 		show all item list here
 	  </p>
 	<br />
@@ -45,8 +47,9 @@
 	</ul>
 </div>
 <div class="tab_content">
+	<div style="float:right"><a href="#">add photo</a></div>
 	<br />
-	  <p>
+	  <p id="photo_list">
 		show all photos lists here
 	  </p>
 	<br />
