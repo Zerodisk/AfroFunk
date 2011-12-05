@@ -165,6 +165,8 @@ function dialogAlert($msg)
 <div class="tab_content">
 	<form name="frmProductSearch" method="post" action="">
 		<br />
+		<div><a href="product/add" class="product_new_link">new product</a></div>
+		<br />
 		  <p>
 			<span>keyword:&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<input type="text" name="txtSearchKeyword" id="txtSearchKeyword" value="" size="50" />&nbsp;&nbsp;

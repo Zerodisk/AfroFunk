@@ -171,3 +171,10 @@ a:hover{
 	border-right:none;
 	border-bottom: 1px, solid #ff0000;	
 }
+
+.product_new_link{
+	font-weight: none;
+	float:right;
+	text-decoration: none;
+}
+
