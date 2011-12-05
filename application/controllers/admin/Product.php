@@ -7,6 +7,9 @@ class Product extends MY_Controller{
         //load models
         $this->load->model('ProductModel');
         $this->load->model('ItemModel');
+        $this->load->model('PhotoModel');
+        $this->load->model('SizeModel');
+        $this->load->model('ColorModel');
             
         //load header+footer+title
         $data['header'] = $this::getHeader();
@@ -15,15 +18,33 @@ class Product extends MY_Controller{
     }	
     
     public function index(){
-    	//show admin luncher page with all accessible menu
+    	//populate main data
 		$data['main'] = null;
+    	
+    	//load page name
+        $data['page'] = 'admin/product_search';
+
+        //load page template
+        $this->load->view('admin/template', $data);
+    	
+    }
+    
+    public function view($product_id){
+    	//populate main data
+		$data['main'] = array(
+							'product_id'	=> $product_id,
+							'product'		=> $this->ProductModel->getProductById($product_id, FALSE),							
+							'items'			=> $this->ItemModel->getItemList($product_id, FALSE),
+							'photos'		=> $this->PhotoModel->getPhotoListByProductId($product_id, FALSE),
+							'sizes'			=> $this->SizeModel->getSizeList(),
+							'colors'		=> $this->ColorModel->getColorList(),							
+						);
     	
     	//load page name
         $data['page'] = 'admin/product';
 
         //load page template
         $this->load->view('admin/template', $data);
-    	
     }
     
     public function ajax_search(){

@@ -107,15 +107,6 @@ a:hover{
 	padding: 0 1em;
 }
 
-label_search{
-	width: 9em;
-	float: left;
-	text-align: left;
-	margin-right: 0.5em;
-	display: block;
-	padding-top: 0px
-}
-
 
 .product_search_wait{
 	margin-left: 410px;
@@ -126,14 +117,57 @@ label_search{
 	padding: 1px;
 	text-decoration: none;
 	text-align: center;
-	width: 740px;
+	width: 800px;
 	height: 135px;
 }
 
 .product_search_list{
 	background: #ffffff;
 	float: left;
-	width: 120px;
+	width: 130px;
 	margin: 1px;
 }
 
+.product_search_title{
+	clear: both;
+	padding: 1px;
+	text-decoration: none;
+	text-align: center;
+	width: 740px;
+	height: 50px;	
+	font-weight: bold;
+}
+
+.product_item_top {
+	clear: both;
+	padding: 1px;
+	text-decoration: none;
+	text-align: center;
+	width: 800px;
+	height: 12px;
+}
+
+.product_item_list{
+	background: #ffffff;
+	float: left;
+	width: 130px;
+	border: 0px solid;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1px, solid #ff0000;	
+}
+
+.product_item_header{
+	padding-top:15px;
+	font-weight: bold;
+	background: #ffffff;
+	float: left;
+	width: 120px;
+	height: 25px;
+	border: 1px solid;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1px, solid #ff0000;	
+}

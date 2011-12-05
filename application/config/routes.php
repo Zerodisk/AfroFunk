@@ -45,8 +45,8 @@ $route['404_override'] = '';
 $route['[C,c]ategory'] = "home";
 
 //product and category by primary key
-$route['[P,p]roduct/(:num)']   = "product/view/$1";
-$route['[P,p]roducts/(:num)']  = "product/view/$1";
+$route['[P,p]roduct/(:any)']   = "product/view/$1";
+$route['[P,p]roducts/(:any)']  = "product/view/$1";
 $route['[C,c]ategory/(:num)']  = "category/view/$1";
 $route['[C,c]ategories/(:num)']  = "category/view/$1";
 
@@ -66,9 +66,9 @@ $route['[C,c]ategory/[W,w]omen']  = "category/view/1";
 $route['[C,c]ategory/[A,a]ccessories']  = "category/view/3";
 $route['[C,c]ategory/[A,a]ccessory']    = "category/view/3";
 
-$route['[C,c]ategory/[B,b]oys/(:num)']   	   = "product/view/$1";
-$route['[C,c]ategory/[G,g]irls/(:num)']  	   = "product/view/$1";
-$route['[C,c]ategory/[A,a]ccessories/(:num)']  = "product/view/$1";
+$route['[C,c]ategory/[B,b]oys/(:any)']   	   = "product/view/$1";
+$route['[C,c]ategory/[G,g]irls/(:any)']  	   = "product/view/$1";
+$route['[C,c]ategory/[A,a]ccessories/(:any)']  = "product/view/$1";
 
 
 /*
