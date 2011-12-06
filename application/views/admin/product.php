@@ -11,7 +11,7 @@ function setValue($value){
 
 <script type="text/javascript">
 <!--
-var $isNew = <?=$isNew?>;
+var $isNew = <?if ($isNew){ echo('true'); } else{ echo('false'); }?>;
 var $product_id = <?=$product_id?>;
 var $is_active = <?if (isset($product['is_active'])) { echo($product['is_active']); } else{ echo('false'); }?>;
 
@@ -37,13 +37,11 @@ var returnItemList = function(item){
 };
 
 var returnPhotoList = function(photo){
-	var li_start = '<li class="product_item_list">';
-
-	var img = li_start + '<img src="<?=base_url().'images/products/'?>' + photo.photo_filename + '" /></li>';
+	var img = '<img src="<?=base_url().'images/products/'?>' + photo.photo_filename + '" />';
 	
-	return '<ul class="product_item_top">'
+	return '<div class="unit size1of2">'
 			 + img
-			 + '</ul>';
+			 + '</div>';
 };
 
 
@@ -76,6 +74,10 @@ var fnLoadPhotoList = function(product_id){
                 $(targetTag).empty();
 	            for (var i = 0;i <= json.data.length - 1;i++){
 					$(targetTag).append(returnPhotoList(json.data[i]));
+					if ((i % 2) == 1){						
+						$(targetTag).append('<p>&nbsp;</p>');
+						$('#photo_list').height($('#photo_list').height() + 100);
+					}
 	            }	
             }
             else{
@@ -101,14 +103,15 @@ $(document).ready(function(){
 
 		//check price color - show in red if product is on discount
 		if ($('#txtPrice').val() != $('#txtPriceSale').val()){
-			//$('#txtPriceSale').attr("style", "red");
 			$('#txtPriceSale').addClass('red');
 		} 
 
 	}
 });
 
-
+function fnSubmit(){
+	document.frmAdminProduct.submit();
+}
 
 //-->
 </script>
@@ -123,6 +126,11 @@ $(document).ready(function(){
 <div class="tab_content" id="section_product_content">
 	<div><a href="<?=base_url().'admin/product/add'?>" class="product_new_link">new product</a></div>
 	<br /><br />
+	<form name="frmAdminProduct" method="post" action="<?=base_url()?>admin/product/save">
+	  <input type="hidden" name="isNew" value="<?if ($isNew){ echo('true'); } else{ echo('false'); }?>">
+	  <input type="hidden" name="cmdAdminProduct" value="submit">
+	  <input type="hidden" name="product_id" value="<?=$product_id?>">
+	  
 	  <div class="product_general_container">
 	  	 <div>
 			<div class="unit size1of4">
@@ -202,11 +210,12 @@ $(document).ready(function(){
 			</div>		
 	     </div>		          	      		
 	  </div>	
+	</form>
 	  
-	  <br /><br /><br />
-	  <div class="product_general_container" style="text-align: right">
-	  		<a href="#" class="grey-button pcb" id="linkSave"><span>Save Product</span></a>&nbsp;&nbsp;
-	  </div>
+	<br /><br /><br />
+	<div class="product_general_container" style="text-align: right">
+	  	 <a href="javascript:void();" class="grey-button pcb" id="linkSave" onclick="fnSubmit();"><span>Save Product</span></a>&nbsp;&nbsp;
+	</div>
 
 		
 		
@@ -248,7 +257,7 @@ $(document).ready(function(){
 <div class="tab_content" id="section_photo_content">
 	<div><a href="#" class="product_new_link">add photo</a></div>
 	<br />
-	  <p id="photo_list">
+	  <p id="photo_list" style="height: 100px">
 		<div id="ajax_waiting_photo" class="product_search_wait"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>
 	  </p>
 	<br />

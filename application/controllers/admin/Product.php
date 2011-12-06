@@ -11,6 +11,9 @@ class Product extends MY_Controller{
         $this->load->model('PhotoModel');
         $this->load->model('SizeModel');
         $this->load->model('ColorModel');
+        
+        $this->load->library('form_validation');
+        $this->load->helper('form');
             
         //load header+footer+title
         $data['header'] = $this::getHeader();
@@ -28,11 +31,15 @@ class Product extends MY_Controller{
 
         //load page template
         $this->load->view('admin/template', $data);
-    	
     }
     
-    //add new product
-    public function add(){
+    //add new product page
+    public function add(){    	        
+        $this->_beforeFormRender(TRUE, 0, NULL);
+    }
+    
+    //update existing product or add new product
+    public function save(){
     	/*
     	 * 1. check for signal to add submittion
     	 * 2. add new product
@@ -42,23 +49,33 @@ class Product extends MY_Controller{
     	 *		    return;
     	 * 
     	 */
-    	
-    	
-    	//show new product entry page
-    	$data['main'] = array(
-    						'isNew' 		=> 'true',
-    						'product_id'	=> '0',
-    						'product'		=> NULL,
-    						'sizes'			=> $this->SizeModel->getSizeList(),
-    						'colors'		=> $this->ColorModel->getColorList(),
-    						'categories'	=> $this->CategoryModel->getCategoryList(NULL, FALSE),
-    					);
-    	
-    	//load page name
-        $data['page'] = 'admin/product';
 
-        //load page template
-        $this->load->view('admin/template', $data);
+    	if ($this->input->post('cmdAdminProduct') == 'submit'){
+    		//set form validation rule
+	        $this->_setValidationRule();    
+	        				    			    				
+	    	//validate data
+	    	if ($this->form_validation->run() == TRUE){
+				//success validate	
+				if ($this->input->post('isNew') == 'true'){
+    				//save new product
+		
+		    			
+		    	}
+		    	else{
+		    		//update existing product
+		
+		    			
+		    	}
+		    		
+		    	$this->view($product_id);
+		    	return;
+			}
+			else{
+				//error validation				
+				echo('data error, please click back on browser and try again<br />'.validation_errors());
+			}   
+    	}
     }
     
     //view individual page
@@ -68,24 +85,10 @@ class Product extends MY_Controller{
         	echo 'selected product is not found !!';
         	return;
         }
-    	
-    	//populate main data
-		$data['main'] = array(
-							'isNew' 		=> 'false',
-							'product_id'	=> $product_id,
-							'product'		=> $product,							
-							'sizes'			=> $this->SizeModel->getSizeList(),
-							'colors'		=> $this->ColorModel->getColorList(),	
-							'categories'	=> $this->CategoryModel->getCategoryList(NULL, FALSE),
-						);
-    	
-    	//load page name
-        $data['page'] = 'admin/product';
-
-        //load page template
-        $this->load->view('admin/template', $data);
+        
+        $this->_beforeFormRender(FALSE, $product_id, $product);
     }
-    
+
     
     
     // ************************** ajax controller ************************ //
@@ -125,5 +128,39 @@ class Product extends MY_Controller{
     	$photos = $this->PhotoModel->getPhotoListByProductId($product_id, FALSE);
  		$this->echoJson(TRUE, $photos);   	
     }
+    
+    
+    
+	// ************************** private function ************************ //
+    /*
+     * set codeigniter validation rule
+     */
+    private function _setValidationRule(){
+    	$this->form_validation->set_rules('txtProductName', 'product name' 	  , 'trim|required');
+    	$this->form_validation->set_rules('txtPrice' 	  , 'price (original)', 'trim|required|decimal');
+    	$this->form_validation->set_rules('txtPriceSale'  , 'price (sale)'    , 'trim|required|decimal|greater_than[0]');
+    	
+    	$this->form_validation->set_error_delimiters('<span class="error" style="color:red;">', '</span>');
+    }
+    
+    private function _beforeFormRender($isNew, $product_id, $product){
+    	//populate main data
+		$data['main'] = array(
+							'isNew' 		=> $isNew,
+							'product_id'	=> $product_id,
+							'product'		=> $product,							
+							'sizes'			=> $this->SizeModel->getSizeList(),
+							'colors'		=> $this->ColorModel->getColorList(),	
+							'categories'	=> $this->CategoryModel->getCategoryList(NULL, FALSE),
+						);
+    	
+    	//load page name
+        $data['page'] = 'admin/product';
 
+        //load page template
+        $this->load->view('admin/template', $data);
+    }
+    
+    
+    
 }

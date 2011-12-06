@@ -2,7 +2,7 @@
 <!--
 
 var record_index = 0;
-var limit = 50;
+var limit = 5;
 var keyword;
 var noMoreResult = false;
 
@@ -120,9 +120,9 @@ function loadSearch(){
             	noMoreResult = true;
             	if (record_index == 0) {showNoResultFound();}
             }
+            $('#ajax_waiting').hide();	
 		}
 	);	
-	$('#ajax_waiting').hide();	
 }
 
 function loadMoreResult(){

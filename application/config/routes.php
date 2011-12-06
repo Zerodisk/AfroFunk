@@ -45,8 +45,8 @@ $route['404_override'] = '';
 $route['[C,c]ategory'] = "home";
 
 //product and category by primary key
-$route['[P,p]roduct/(:any)']   = "product/view/$1";
-$route['[P,p]roducts/(:any)']  = "product/view/$1";
+$route['[P,p]roduct/(:num)']   = "product/view/$1";
+$route['[P,p]roducts/(:num)']  = "product/view/$1";
 $route['[C,c]ategory/(:num)']  = "category/view/$1";
 $route['[C,c]ategories/(:num)']  = "category/view/$1";
 
