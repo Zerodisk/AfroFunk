@@ -112,6 +112,10 @@ a:hover{
 	margin-left: 410px;
 }
 
+.product_item_search_wait{
+	margin-left: 180px;
+}
+
 .product_search_top {
 	clear: both;
 	padding: 1px;
@@ -177,4 +181,14 @@ a:hover{
 	float:right;
 	text-decoration: none;
 }
+
+.product_general_container {
+	width: 832px;
+	margin: 0 auto;
+}
+
+.red{
+	color: red;
+}
+
 

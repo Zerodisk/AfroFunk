@@ -5,6 +5,7 @@ class Product extends MY_Controller{
         parent::__construct('admin');
         
         //load models
+        $this->load->model('CategoryModel');
         $this->load->model('ProductModel');
         $this->load->model('ItemModel');
         $this->load->model('PhotoModel');
@@ -47,6 +48,10 @@ class Product extends MY_Controller{
     	$data['main'] = array(
     						'isNew' 		=> 'true',
     						'product_id'	=> '0',
+    						'product'		=> NULL,
+    						'sizes'			=> $this->SizeModel->getSizeList(),
+    						'colors'		=> $this->ColorModel->getColorList(),
+    						'categories'	=> $this->CategoryModel->getCategoryList(NULL, FALSE),
     					);
     	
     	//load page name
@@ -70,7 +75,8 @@ class Product extends MY_Controller{
 							'product_id'	=> $product_id,
 							'product'		=> $product,							
 							'sizes'			=> $this->SizeModel->getSizeList(),
-							'colors'		=> $this->ColorModel->getColorList(),							
+							'colors'		=> $this->ColorModel->getColorList(),	
+							'categories'	=> $this->CategoryModel->getCategoryList(NULL, FALSE),
 						);
     	
     	//load page name
@@ -99,7 +105,7 @@ class Product extends MY_Controller{
     //ajax for item list for a given product_id
     public function ajax_getItemList(){
     	$product_id = $this->input->get_post('product_id');
-		sleep(2);
+
     	$items = $this->ItemModel->getItemList($product_id, FALSE);
     	$this->echoJson(TRUE, $items);
     }
@@ -115,7 +121,7 @@ class Product extends MY_Controller{
     //ajax for photo list for a given product_id
     public function ajax_getPhotoList(){
     	$product_id = $this->input->get_post('product_id');
-    	sleep(2);
+
     	$photos = $this->PhotoModel->getPhotoListByProductId($product_id, FALSE);
  		$this->echoJson(TRUE, $photos);   	
     }

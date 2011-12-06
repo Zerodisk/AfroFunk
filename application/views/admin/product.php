@@ -1,7 +1,19 @@
+<?php 
+function setValue($value){
+	if (isset($value)){
+		return $value;
+	}
+	else{
+		return '';
+	}
+}
+?>
+
 <script type="text/javascript">
 <!--
 var $isNew = <?=$isNew?>;
 var $product_id = <?=$product_id?>;
+var $is_active = <?if (isset($product['is_active'])) { echo($product['is_active']); } else{ echo('false'); }?>;
 
 var fnAddNewProduct = function(){
 	$('#section_item').hide();
@@ -49,6 +61,9 @@ var fnLoadItemList = function(product_id){
 				$(targetTag).append('no items found');
             }             	  
             $('#ajax_waiting_item').hide();
+
+            //load photo list
+            fnLoadPhotoList(product_id);
 		}
 	);
 };
@@ -76,8 +91,20 @@ $(document).ready(function(){
 		fnAddNewProduct();
 	}
 	else{
+		//load item list, then load photo list inside fnLoadItemList(product_id) function
 		fnLoadItemList($product_id);
-		//fnLoadPhotoList($product_id);
+
+		//handle the checkbox (is_active)
+		if ($is_active){
+			$('#chkIsActive').prop("checked", true);
+		}
+
+		//check price color - show in red if product is on discount
+		if ($('#txtPrice').val() != $('#txtPriceSale').val()){
+			//$('#txtPriceSale').attr("style", "red");
+			$('#txtPriceSale').addClass('red');
+		} 
+
 	}
 });
 
@@ -95,11 +122,95 @@ $(document).ready(function(){
 </div>
 <div class="tab_content" id="section_product_content">
 	<div><a href="<?=base_url().'admin/product/add'?>" class="product_new_link">new product</a></div>
-	<br />
-	  <p>
-		show product details here
-	  </p>
-	<br />
+	<br /><br />
+	  <div class="product_general_container">
+	  	 <div>
+			<div class="unit size1of4">
+				product id:
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtProductId" id="txtProductId" value="<?=setValue($product['product_id'])?>" disabled/>
+			</div>		
+			<div class="unit size1of4">
+				product name:
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtProductName" id="txtProductName" value="<?=setValue($product['product_name'])?>" />
+			</div>
+	     </div>		
+	     <br /><br />
+	  	 <div>
+			<div class="unit size1of4">
+				$price (original):
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtPrice" id="txtPrice" value="<?=setValue($product['price'])?>" />
+			</div>		
+			<div class="unit size1of4">
+				$price (sale):
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtPriceSale" id="txtPriceSale" value="<?=setValue($product['price']) - setValue($product['price_discount_amt'])?>" />
+			</div>
+	     </div>		
+	     <br /><br />
+	  	 <div>
+			<div class="unit size1of4">
+				selling on web:
+			</div>
+			<div class="unit size1of4">
+				<input type="checkbox" name="chkIsActive" id="chkIsActive" value="true" />
+			</div>		
+			<div class="unit size1of4">
+				category:
+			</div>
+			<div class="unit size1of4">
+				
+			</div>
+	     </div>	    
+	     <br /><br />
+	  	 <div>
+			<div class="unit size1of4">
+				date created:
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtDateCreated" id="txtDateCreated" value="<?=setValue($product['date_created'])?>" disabled/>
+			</div>		
+			<div class="unit size1of4">
+				date last change:
+			</div>
+			<div class="unit size1of4">
+				<input type="text" name="txtDateModified" id="txtDateModified" value="<?=setValue($product['date_modified'])?>" disabled/>
+			</div>
+	     </div>	 
+	     <br /><br />
+	  	 <div style="height:150px">
+			<div class="unit size1of4">
+				product description:
+			</div>
+			<div class="unit size3of4">
+				<textarea name="" id="" rows="10" cols="100"><?=setValue($product['description'])?></textarea>
+			</div>		
+	     </div>	 	
+	     <br /><br />
+	  	 <div style="height:150px">
+			<div class="unit size1of4">
+				size description:
+			</div>
+			<div class="unit size3of4">
+				<textarea name="" id="" rows="10" cols="100"><?=setValue($product['size_description'])?></textarea>
+			</div>		
+	     </div>		          	      		
+	  </div>	
+	  
+	  <br /><br /><br />
+	  <div class="product_general_container" style="text-align: right">
+	  		<a href="#" class="grey-button pcb" id="linkSave"><span>Save Product</span></a>&nbsp;&nbsp;
+	  </div>
+
+		
+		
+	<br /><br />
 </div>
 
 
@@ -152,3 +263,5 @@ $(document).ready(function(){
 <?if (isset($colors)) {var_dump($colors);} ?>
 <br /><br />
 <?if (isset($sizes)) {var_dump($sizes);} ?>
+<br /><br />
+<?if (isset($categories)) {var_dump($categories);} ?>

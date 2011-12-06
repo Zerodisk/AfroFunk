@@ -22,6 +22,7 @@ $(document).ready(function(){
 
 function showItemList(product_id){
 	var targetTag = '#item_' + product_id;
+	$('#ajax_waiting_item_' + product_id).show();
 	$.getJSON('<?=base_url()?>admin/product/ajax_getItemList', { 'product_id' : product_id }, 
 		function(json){
             if (json.data.length > 0){
@@ -36,13 +37,15 @@ function showItemList(product_id){
             else{
             	dialogAlert('no items found');
               	$('#linkShowItem_' + product_id).hide();
-            }		                	  
+            }	
+            $('#ajax_waiting_item_' + product_id).show();	                	  
 		}
 	);	
 }
 
 function returnSearchResultItem(product){
 	var li_start = '<li class="product_search_list">';
+	var wait = '<div id="ajax_waiting_item_' + product.product_id + '" class="product_item_search_wait" style="display:none;"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>'
 	
 	var photo    = li_start + '<img height="100" src="<?=base_url().'images/products/'?>' + product.photo_filename + '" /></li>';
 	var id       = li_start + product.product_id + '</li>';
@@ -52,7 +55,7 @@ function returnSearchResultItem(product){
 	var options  = li_start + '<a href="javascript:showItemList(' + product.product_id + ')" id="linkShowItem_' + product.product_id + '">show items</a></li>';
 
 	var space    = li_start + '&nbsp;</li>';
-	var items    = li_start + '<div id="item_' + product.product_id + '" /></li>';
+	var items    = li_start + '<div id="item_' + product.product_id + '">' + wait + '</div></li>';
 	
 	return '<ul class="product_search_top">'
 			 + photo + id + name + price + qty + options + space + items

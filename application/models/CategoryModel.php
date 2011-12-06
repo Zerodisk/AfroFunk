@@ -7,12 +7,12 @@ class CategoryModel extends CI_Model{
     }
     
     //function return list of category by given parent_id (parent_id = null mean first level of category)
-    function getCategoryList($parent_id = null, $active_only = TRUE){      
+    function getCategoryList($parent_id = NULL, $active_only = TRUE){      
     	$sql_extra = '';
     	if ($active_only){
     		$sql_extra = ' and is_active = 1 ';
     	}      
-        if ($parent_id == null)
+        if ($parent_id == NULL)
             $sql = 'select * from category where parent_id is ?'.$sql_extra;
         else
             $sql = 'select * from category where parent_id = ?'.$sql_extra;  

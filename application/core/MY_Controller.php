@@ -2,10 +2,12 @@
 /*
  * this is the main controller where all afro-controller need to inherit
  *   the __construct can accept one input which is the $section
- *     - NULL   mean the public afro shopping
+ *     - NULL   mean the public afro shopping (assume $section = public)
  *     - admin  mean the admin area where we can manage inventory/stock/sale/report
  */
 class MY_Controller extends CI_Controller{
+	
+	var $section;
     
 	public function __construct($section = NULL){
         parent::__construct();
@@ -19,9 +21,11 @@ class MY_Controller extends CI_Controller{
         		}
         		break;
         	 default:
-
+        	 	$section = 'public';  //assume as public internet access
         		break;
         }
+        
+        $this->section = $section;
     }	
     
     /*
@@ -81,6 +85,7 @@ class MY_Controller extends CI_Controller{
     	if ($result->status)
     		$result->data = $object;
     	
+    	sleep(1);
     	echo(json_encode($result));
     }
     
