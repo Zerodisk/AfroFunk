@@ -44,5 +44,26 @@ class SizeModel extends CI_Model{
         $this->db->delete('size', array('size_id' => $pid));
     }
     
+    /*
+    * return active size drop down options
+    *  input are the first list in drop down box
+    *   - $initialValue is value in dropdown list
+    *   - $initialText  is the text display in dropdown list
+    *
+    *  output is the array option for codigniter form_dropdown function
+    */
+    function getSizeDropdown($initialValue = NULL, $initialText = NULL){
+    	$options = array();
+    	$sizes = $this->getSizeList();
+    
+    	if (($initialValue != NULL) && ($initialText != NULL))
+    	$options[$initialValue] = $initialText;
+    
+    	foreach ($sizes as $size){
+    		$options[$size['size_id']] = $size['size_name'];
+    	}
+    	return $options;
+    }
+    
 }
 

@@ -44,5 +44,26 @@ class ColorModel extends CI_Model{
         $this->db->delete('color', array('color_id' => $pid));
     }
     
+    /*
+    * return active color drop down options
+    *  input are the first list in drop down box
+    *   - $initialValue is value in dropdown list
+    *   - $initialText  is the text display in dropdown list
+    *
+    *  output is the array option for codigniter form_dropdown function
+    */
+    function getColorDropdown($initialValue = NULL, $initialText = NULL){
+    	$options = array();
+    	$colors = $this->getColorList();
+    
+    	if (($initialValue != NULL) && ($initialText != NULL))
+    	$options[$initialValue] = $initialText;
+    
+    	foreach ($colors as $color){
+    		$options[$color['color_id']] = $color['color_name'];
+    	}
+    	return $options;
+    }    
+    
 }
 

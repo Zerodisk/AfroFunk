@@ -21,7 +21,7 @@ class ProductModel extends CI_Model{
         $sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
         	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
-                   sum(i.qty) as qty
+                   sum(i.qty) as qty, p.category_id
         	    from product p inner join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
         	    where p.category_id = ? 
@@ -52,7 +52,7 @@ class ProductModel extends CI_Model{
     	$sql = 'select p.product_id, p.product_name, p.description, p.size_description, p.price, p.price_discount_amt, 
         	       p.price - p.price_discount_amt as price_sell, p.is_active, p.date_created, p.date_modified, 
         	       ifnull(o.filename, CONCAT(p.product_id, ".jpg")) as photo_filename,
-                   ifnull(sum(i.qty), 0) as qty, count(i.item_id) as num_items
+                   ifnull(sum(i.qty), 0) as qty, count(i.item_id) as num_items, p.category_id
         	    from product p left join item i on p.product_id = i.product_id 
                     left join photo o on (p.product_id = o.product_id and o.is_main = 1)          
         	    where p.product_name like ?
@@ -88,7 +88,7 @@ class ProductModel extends CI_Model{
     	}
         $sql = 'select product_id, product_name, description, size_description, 
                 price, price_discount_amt, price - price_discount_amt as price_sell, 
-        		is_active, date_created, date_modified from product where product_id = ?'.$sql_extra;
+        		is_active, date_created, date_modified, category_id from product where product_id = ?'.$sql_extra;
         
         $query = $this->db->query($sql, array($product_id));
         //$data = $query->result_array();

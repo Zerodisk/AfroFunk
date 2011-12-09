@@ -65,5 +65,26 @@ class CategoryModel extends CI_Model{
     }
     
     
+    /*
+    * return active category drop down options
+    *  input are the first list in drop down box
+    *   - $initialValue is value in dropdown list
+    *   - $initialText  is the text display in dropdown list
+    *
+    *  output is the array option for codigniter form_dropdown function
+    */
+    function getCategoryDropdown($initialValue = NULL, $initialText = NULL){
+    	$options = array();
+    	$categories = $this->getCategoryList();
+    	 
+    	if (($initialValue != NULL) && ($initialText != NULL))
+    	$options[$initialValue] = $initialText;
+    	 
+    	foreach ($categories as $category){
+    		$options[$category['category_id']] = $category['category_name'];
+    	}
+    	return $options;
+    }    
+    
 }
    

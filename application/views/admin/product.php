@@ -25,14 +25,20 @@ var fnAddNewProduct = function(){
 
 var returnItemList = function(item){
 	var li_start = '<li class="product_item_list">';
-
-	var id    = li_start + item.item_id + '</li>';
-	var color = li_start + item.color_name + '</li>';
-	var size =  li_start + item.size_name  + '</li>';
-	var qty =   li_start + item.qty        + '</li>';
+	var statusText = '';
+	if (item.is_active == 1)
+		statusText = 'actived';
+	else
+		statusText = 'disabled';
+	
+	var id     = li_start + item.item_id    + '</li>';
+	var color  = li_start + item.color_name + '</li>';
+	var size   = li_start + item.size_name  + '</li>';
+	var qty    = li_start + item.qty        + '</li>';
+	var status = li_start + statusText      + '</li>';
 	
 	return '<ul class="product_item_top">'
-			 + id + color + size + qty 
+			 + id + color + size + qty + status
 			 + '</ul>';
 };
 
@@ -173,7 +179,7 @@ function fnSubmit(){
 				category:
 			</div>
 			<div class="unit size1of4">
-				
+				<?=form_dropdown('category_id', $categories_options, $category_id_selected)?>
 			</div>
 	     </div>	    
 	     <br /><br />
@@ -197,7 +203,7 @@ function fnSubmit(){
 				product description:
 			</div>
 			<div class="unit size3of4">
-				<textarea name="" id="" rows="10" cols="100"><?=setValue($product['description'])?></textarea>
+				<textarea name="txtProductDescription" id="txtProductDescription" rows="10" cols="100"><?=setValue($product['description'])?></textarea>
 			</div>		
 	     </div>	 	
 	     <br /><br />
@@ -206,7 +212,7 @@ function fnSubmit(){
 				size description:
 			</div>
 			<div class="unit size3of4">
-				<textarea name="" id="" rows="10" cols="100"><?=setValue($product['size_description'])?></textarea>
+				<textarea name="txtSizeDescription" id="txtSizeDescription" rows="10" cols="100"><?=setValue($product['size_description'])?></textarea>
 			</div>		
 	     </div>		          	      		
 	  </div>	
@@ -238,6 +244,7 @@ function fnSubmit(){
 	  	 <li class="product_item_list"><b>Color</b></li>
 	  	 <li class="product_item_list"><b>Size</b></li>
 	  	 <li class="product_item_list"><b>Stock</b></li>
+	  	 <li class="product_item_list"><b>Status</b></li>
 	  	 <li class="product_item_list"><b>Option</b></li>
 	  </ul>
 	  <p id="item_list">
@@ -269,8 +276,8 @@ function fnSubmit(){
 <br /><br /><br /><br /><br /><br /><br /><br />
 <?if (isset($product)) {var_dump($product);} ?>
 <br /><br />
-<?if (isset($colors)) {var_dump($colors);} ?>
+<?if (isset($colors_options)) {var_dump($colors_options);} ?>
 <br /><br />
-<?if (isset($sizes)) {var_dump($sizes);} ?>
+<?if (isset($sizes_options)) {var_dump($sizes_options);} ?>
 <br /><br />
-<?if (isset($categories)) {var_dump($categories);} ?>
+<?if (isset($categories_options)) {var_dump($categories_options);} ?>

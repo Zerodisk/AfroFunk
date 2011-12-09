@@ -16,7 +16,7 @@ class ItemModel extends CI_Model{
     	}
     	
     	$sql = 'select i.item_id, i.qty, i.weight, i.date_created, i.date_modified,
-				i.color_id, c.color_name, i.size_id, s.size_name
+				i.color_id, c.color_name, i.size_id, s.size_name, i.is_active
 				from item i left join size s on i.size_id = s.size_id
 					left join color c on i.color_id = c.color_id
 				where i.product_id = ? '.$sql_extra;
