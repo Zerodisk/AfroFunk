@@ -12,8 +12,8 @@ class Product extends MY_Controller{
         $this->load->model('SizeModel');
         $this->load->model('ColorModel');
         
+        $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-        $this->load->helper('form');
             
         //load header+footer+title
         $data['header'] = $this::getHeader();
@@ -97,6 +97,39 @@ class Product extends MY_Controller{
         
         $this->_addProductDataToViewBeforeRender(FALSE, $product_id, $product);
     }
+    
+    public function photo_add($product_id){
+		$data['product_id'] = $product_id;
+
+        //load page template
+        $this->load->view('admin/photo_upload', $data);
+    }
+    
+    public function photo_save(){
+    	$this->load->library('upload');
+
+    	$product_id = $this->input->get_post('product_id');
+    	$filename = $this->PhotoModel->getNewPhotoFileName($product_id).'.jpg';
+    	
+    	$config['upload_path']   = $this->PhotoModel->getLocalFolder();
+    	$config['file_name']     = $filename;
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	     = '1024';
+
+		$this->upload->initialize($config);
+
+		if ( ! $this->upload->do_upload()){
+			//error
+			$error = array('error' => $this->upload->display_errors());
+			echo("upload file fail\n\n".$error);
+		}
+		else{
+			//success
+			
+			$photo_id = $this->PhotoModel->addPhoto($product_id, $filename);
+			echo('photo upload success, click ok button to close this windoe');
+		}
+    }
 
     
     
@@ -141,7 +174,7 @@ class Product extends MY_Controller{
     	$product_id = $this->input->get_post('product_id');
     	$qty        = $this->input->get_post('qty');
     	$size_id    = $this->input->get_post('size_id');
-    	$color_id   = $this->input->get_post('color');
+    	$color_id   = $this->input->get_post('color_id');
     	
     	$param = array();
     	if ($size_id > 0)
@@ -170,6 +203,21 @@ class Product extends MY_Controller{
     	
     	$this->ItemModel->updateitem($item_id, $param);
     	$this->echoJson(TRUE, NULL);
+    }
+    
+    public function ajax_deletePhoto(){
+    	$photo_id = $this->input->get_post('photo_id');
+    	
+    	$this->PhotoModel->deletePhoto($photo_id);
+    	$this->echoJson(TRUE, NULL);
+    }
+    
+    public function ajax_updatePhoto(){
+    	$photo_id = $this->input->get_post('photo_id');
+    	$is_main = $this->input->get_post('is_main');
+    	$is_active = $this->input->get_post('is_active');
+    	
+    	
     }
     
     

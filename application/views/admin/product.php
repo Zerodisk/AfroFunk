@@ -13,7 +13,9 @@ function setValue($value){
 <!--
 var $isNew = <?if ($isNew){ echo('true'); } else{ echo('false'); }?>;
 var $product_id = <?=$product_id?>;
+var $item_id = 0;
 var $is_active = <?if (isset($product['is_active'])) { echo($product['is_active']); } else{ echo('false'); }?>;
+
 
 var fnAddNewProduct = function(){
 	$('#section_item').hide();
@@ -36,21 +38,87 @@ var returnItemList = function(item){
 	var size   = li_start + item.size_name  + '</li>';
 	var qty    = li_start + item.qty        + '</li>';
 	var status = li_start + statusText      + '</li>';
+	var option = li_start + '<a href="javascript:btnEditItem_Click(' + item.item_id + ', ' + item.size_id + ', ' + item.color_id + ', ' + item.is_active + ')">edit</a></li>';
 	
 	return '<ul class="product_item_top">'
-			 + id + color + size + qty + status
+			 + id + color + size + qty + status + option;
 			 + '</ul>';
 };
 
 var returnPhotoList = function(photo){
-	var img = '<img src="<?=base_url().'images/products/'?>' + photo.photo_filename + '" />';
+	var img = '<img src="<?=base_url().'images/products/'?>' + photo.photo_filename + '" width="150" style="float:left" />';
+	var del = '<a href="javascript:void();" class="grey-button pcb" id="linkSave" onclick="btnDeletePhoto_Click(' + photo.photo_id + ');"><span>Delete</span></a>';
+	var is_active = '';
+	var is_main = '';
+
 	
 	return '<div class="unit size1of2">'
-			 + img
+			 + img + del + is_active + is_main
 			 + '</div>';
 };
 
+//function for add new photo (actually just close window dialog)
+var fnAddPhoto = function(){
+	$(this).dialog('close');
+    $('#dialogAlert').remove();
 
+    $('#ajax_waiting_photo').show();
+    fnLoadPhotoList($product_id);	
+};
+
+//function for editing an existing item
+var fnEditItem = function(){
+	var item_id    = $item_id;
+	var size_id    = $('#size_id_edit').val();
+	var color_id   = $('#color_id_edit').val();
+	var is_active  = 0;
+	
+	if ($('#chkIsActive_edit').is(':checked'))
+		is_active = 1;
+
+	$('#ajax_waiting_item').show();
+
+	$.getJSON('<?=base_url()?>admin/product/ajax_updateItem', { 'item_id' : item_id, 'size_id': size_id, 'color_id': color_id, 'is_active': is_active }, 
+			function(json){
+	            if (json.status){
+					//edit success
+					fnLoadItemList($product_id);					
+	            	$(this).dialog('close');
+	                $('#dialogAlert').remove();		                
+	            }	   
+	            else{
+					//edit failed !!!
+					alert('Edit item failed, please try again');
+	            }             	  	          
+			}
+		);	
+};
+
+//function for adding a new item
+var fnAddNewItem = function(){
+	var product_id = $product_id;
+	var qty        = $('#qty_new').val();
+	var size_id    = $('#size_id_new').val();
+	var color_id   = $('#color_id_new').val();
+	$('#ajax_waiting_item').show();
+	
+	$.getJSON('<?=base_url()?>admin/product/ajax_addNewItem', { 'product_id' : product_id, 'qty': qty, 'size_id': size_id, 'color_id': color_id }, 
+			function(json){
+	            if (json.status){
+					//add success
+					fnLoadItemList($product_id);					
+	            	$(this).dialog('close');
+	                $('#dialogAlert').remove();		                
+	            }	   
+	            else{
+					//add failed !!!
+					alert('Add new item failed, please try again');
+	            }             	  	          
+			}
+		);	
+};
+
+//function to load items
 var fnLoadItemList = function(product_id){
 	targetTag = '#item_list';
 	$.getJSON('<?=base_url()?>admin/product/ajax_getItemList', { 'product_id' : product_id }, 
@@ -72,10 +140,13 @@ var fnLoadItemList = function(product_id){
 	);
 };
 
+//function to load photo list
 var fnLoadPhotoList = function(product_id){
 	targetTag = '#photo_list';
 	$.getJSON('<?=base_url()?>admin/product/ajax_getPhotoList', { 'product_id' : product_id }, 
 		function(json){
+			$('#photo_list').height(200);
+		
             if (json.data.length > 0){
                 $(targetTag).empty();
 	            for (var i = 0;i <= json.data.length - 1;i++){
@@ -89,7 +160,24 @@ var fnLoadPhotoList = function(product_id){
             else{
 				$(targetTag).append('no photo found');
             }    
+            
             $('#ajax_waiting_photo').hide();	                	  
+		}
+	);
+};
+
+//function to delete photo 
+var fnDeletePhoto = function(photo_id){
+	$('#ajax_waiting_photo').show();
+	$.getJSON('<?=base_url()?>admin/product/ajax_deletePhoto', { 'photo_id' : photo_id }, 
+		function(json){		
+            if (json.status){
+            	fnLoadPhotoList($product_id);
+            }
+            else{
+				alert('delete photo is failed, please try again.');
+				$('#ajax_waiting_photo').hide();
+            }               
 		}
 	);
 };
@@ -115,10 +203,65 @@ $(document).ready(function(){
 	}
 });
 
-function fnSubmit(){
+
+
+function dialogAlert($title, $msg, $fnAction){
+	$('#dialogAlert').remove();
+
+    $('body').append('<div id="dialogAlert" style="display:none" title="' + $title + '">' + $msg + '</div>');
+    $('#dialogAlert').dialog({
+        modal: true,
+        width: 600,
+        draggable: false,
+        resizable: false,
+        buttons: {
+            OK: function() {
+                $fnAction();
+            }
+        }
+    });
+}
+
+function fnSubmitSave(){
 	document.frmAdminProduct.submit();
 }
 
+function btnAddItem_Click(){
+	var html = $('#dialog_item_new').html();
+	html = html.replace('#qty_new#', 'qty_new');
+	html = html.replace('#color_id_new#', 'color_id_new');
+	html = html.replace('#size_id_new#', 'size_id_new');
+	
+	dialogAlert('add new item', html, fnAddNewItem);
+}
+
+function btnEditItem_Click(item_id, size_id, color_id, is_active){
+	var html = $('#dialog_item_edit').html();
+	$item_id = item_id;
+	html = html.replace('#color_id_edit#', 'color_id_edit');
+	html = html.replace('#size_id_edit#', 'size_id_edit');
+	html = html.replace('#chkIsActive_edit#', 'chkIsActive_edit');
+
+	dialogAlert('edit item', html, fnEditItem);
+
+	//select the existing value (color, size);
+	$('#size_id_edit').val(size_id);	
+	$('#color_id_edit').val(color_id);
+	if (is_active == 1)
+		$('#chkIsActive_edit').attr('checked', true);
+}
+
+function btnAddPhoto_Click(){
+	var html = $('#dialog_photo_new').html();
+
+	dialogAlert('add new photo', html, fnAddPhoto);	
+}
+
+function btnDeletePhoto_Click(photo_id){
+	if (confirm('are you sure to delete this photo?')){
+		fnDeletePhoto(photo_id);		
+	}
+}
 //-->
 </script>
 
@@ -220,7 +363,7 @@ function fnSubmit(){
 	  
 	<br /><br /><br />
 	<div class="product_general_container" style="text-align: right">
-	  	 <a href="javascript:void();" class="grey-button pcb" id="linkSave" onclick="fnSubmit();"><span>Save Product</span></a>&nbsp;&nbsp;
+	  	 <a href="javascript:void();" class="grey-button pcb" id="linkSave" onclick="fnSubmitSave();"><span>Save Product</span></a>&nbsp;&nbsp;
 	</div>
 
 		
@@ -237,7 +380,7 @@ function fnSubmit(){
 	</ul>
 </div>
 <div class="tab_content" id="section_item_content">
-	<div><a href="#" class="product_new_link">add item</a></div>
+	<div><a href="javascript:btnAddItem_Click()" class="product_new_link">add item</a></div>
 	<br />
 	  <ul class="product_item_top">
 	  	 <li class="product_item_list"><b>Id</b></li>
@@ -262,7 +405,7 @@ function fnSubmit(){
 	</ul>
 </div>
 <div class="tab_content" id="section_photo_content">
-	<div><a href="#" class="product_new_link">add photo</a></div>
+	<div><a href="javascript:btnAddPhoto_Click();" class="product_new_link">add photo</a></div>
 	<br />
 	  <p id="photo_list" style="height: 100px">
 		<div id="ajax_waiting_photo" class="product_search_wait"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>
@@ -270,7 +413,29 @@ function fnSubmit(){
 	<br />
 </div>
 
-
+<div id="dialog_item_new" style="display:none">
+	<div class="unit size1of6">&nbsp;&nbsp;color:</div>
+	<div class="unit size1of6"><?=form_dropdown('', $colors_options, '', 'id="#color_id_new#"')?></div>
+	
+	<div class="unit size1of6">&nbsp;&nbsp;size:</div>
+	<div class="unit size1of6"><?=form_dropdown('', $sizes_options, '', 'id="#size_id_new#"')?></div>
+	
+	<div class="unit size1of6">&nbsp;&nbsp;qty:</div>
+	<div class="unit size1of6"><input type="text" id="#qty_new#"  value="" size="3" maxlength="3" /></div>
+</div>
+<div id="dialog_item_edit" style="display:none">
+	<div class="unit size1of6">&nbsp;&nbsp;color:</div>
+	<div class="unit size1of6"><?=form_dropdown('', $colors_options, '', 'id="#color_id_edit#"')?></div>
+	
+	<div class="unit size1of6">&nbsp;&nbsp;size:</div>
+	<div class="unit size1of6"><?=form_dropdown('', $sizes_options, '', 'id="#size_id_edit#"')?></div>
+	 
+	<div class="unit size1of6">selling on web</div>
+	<div class="unit size1of6"><input type="checkbox" id="#chkIsActive_edit#" value="true" /></div>
+</div>
+<div id="dialog_photo_new" style="display:none">
+	<iframe src="../photo_add/<?=$product_id?>" frameBorder="0"></iframe>
+</div>
 
 <br /><br /><br /><br /><br /><br /><br /><br />
 <br /><br /><br /><br /><br /><br /><br /><br />

@@ -6,7 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/oocss/grids.css" />
 		<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/admin_layout.css" />
 		<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/pure-css-buttons-v1.0/buttons.css" />
+		
+		<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/jquery-ui.css" />
+		<!--  
 		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		-->
 		
 		<script type="text/javascript" src="<?=base_url()?>js/jquery-1.6.1.min.js"></script>
 		<script type="text/javascript" src="<?=base_url()?>js/tabSwitch.js"></script>		

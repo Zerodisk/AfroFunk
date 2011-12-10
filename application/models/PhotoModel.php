@@ -52,8 +52,24 @@ class PhotoModel extends CI_Model{
         return $photo;	
     }
     
+    function getNewPhotoFileName($product_id){
+    	$photo_count = $this::countPhotoByProductId($product_id);
+
+        if ($photo_count == 0){
+    		//first photo for this product_id 			- filename = [product_id].[file_extension]
+    		$filename = $product_id;
+    	}
+    	else{
+    		//second photo onward for this product_id 	- filename = [product_id]_[4 digits random number].[file_extension]
+    		$this->load->helper('string');
+    		$filename = $product_id.'_'.random_string('alnum', 4);
+    	}    	
+    	
+    	return $filename;
+    }
+    
     //function to add photo - function return new photo object
-    function addPhoto($param = null, $product_id, $file_extension = '.jpg'){
+    function addPhoto($product_id, $filename, $param = null){
     	$photo_count = $this::countPhotoByProductId($product_id);
 
     	if (!is_array($param)){
@@ -62,28 +78,31 @@ class PhotoModel extends CI_Model{
     	
     	$param['product_id']   = $product_id;
     	$param['date_created'] = date('Y-m-d H:i:s');
-    	
+		$param['filename']     = $filename;
+		    	
     	if ($photo_count == 0){
-    		//first photo for this product_id 			- filename = [product_id].[file_extension]
-    		$param['filename'] = $product_id.$file_extension;
+    		//first photo - set as main automatically
     		$param['is_main']  = 1;
-    	}
-    	else{
-    		//second photo onward for this product_id 	- filename = [product_id]_[4 digits random number].[file_extension]
-    		$this->load->helper('string');
-    		$param['filename'] = $product_id.'_'.random_string('alnum', 4).$file_extension;
     	}
     	
     	$this->db->insert('photo', $param); 
     	
     	$new_photo_id = $this->db->insert_id();
-    	return $this::getPhotoById($new_photo_id);
+    	return $new_photo_id;
     }
     
     //function update photo ($param is array of name and value where name is field's name and value is new udpate value)
-    function updatePhoto($param, $photo_id){
+    function updatePhoto($photo_id, $param){
         $this->db->where('photo_id', $photo_id);
         $this->db->update('photo', $param);
+        
+        if (isset($param['is_main'])){
+        	if ($param['is_main'] == 1){
+        		$photo = $this->getPhotoById($photo_id);
+        		$sql = 'update photo set is_main = 0 where product_id = '.$photo['product_id'].' and photo_id != '.$photo_id;
+        		$this->db->query($sql);
+        	}
+        }
     }
     
     //function return number of photo for a given product_id
