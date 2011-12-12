@@ -51,9 +51,23 @@ var returnPhotoList = function(photo){
 	var is_active = '';
 	var is_main = '';
 
+	if (photo.is_main == 1){
+		is_main = 'this is default photo';
+	}
+	else{
+		is_main = '<a href="javascript:void();" class="grey-button pcb" onclick="btnPhotoMakeDefault_Click(' + photo.photo_id + ')"><span>Set as default</span></a>';
+
+		if (photo.is_active == 1){
+			is_active = '<a href="javascript:void();" class="grey-button pcb" onclick="btnPhotoChangeStatus_Click(' + photo.photo_id + ', 0)"><span>Set to disabled</span></a> - status: Enabled';
+		}
+		else{
+			is_active = '<a href="javascript:void();" class="grey-button pcb" onclick="btnPhotoChangeStatus_Click(' + photo.photo_id + ', 1)"><span>Set to enabled</span></a> - status: Disabled';
+		}	
+	}
+
 	
 	return '<div class="unit size1of2">'
-			 + img + del + is_active + is_main
+			 + img + is_main + '<br/><br/>' + is_active + '<br/><br/>' + del
 			 + '</div>';
 };
 
@@ -83,8 +97,7 @@ var fnEditItem = function(){
 	            if (json.status){
 					//edit success
 					fnLoadItemList($product_id);					
-	            	$(this).dialog('close');
-	                $('#dialogAlert').remove();		                
+					dialogBoxClose();;		                
 	            }	   
 	            else{
 					//edit failed !!!
@@ -107,8 +120,7 @@ var fnAddNewItem = function(){
 	            if (json.status){
 					//add success
 					fnLoadItemList($product_id);					
-	            	$(this).dialog('close');
-	                $('#dialogAlert').remove();		                
+					dialogBoxClose();		                
 	            }	   
 	            else{
 					//add failed !!!
@@ -166,6 +178,38 @@ var fnLoadPhotoList = function(product_id){
 	);
 };
 
+//function to change photo status(is_active)
+var fnPhotoChangeStatus = function(photo_id, is_active){
+	$('#ajax_waiting_photo').show();
+	$.getJSON('<?=base_url()?>admin/product/ajax_photoChangeStatus', { 'photo_id' : photo_id, 'is_active': is_active }, 
+		function(json){		
+            if (json.status){
+            	fnLoadPhotoList($product_id);
+            }
+            else{
+				alert('set photo as a default is failed, please try again.');
+				$('#ajax_waiting_photo').hide();
+            }               
+		}
+	);	
+};
+
+//function make select photo as a main/default photo
+var fnPhotoMakeDefault = function(photo_id){
+	$('#ajax_waiting_photo').show();
+	$.getJSON('<?=base_url()?>admin/product/ajax_photoSetMain', { 'photo_id' : photo_id }, 
+		function(json){		
+            if (json.status){
+            	fnLoadPhotoList($product_id);
+            }
+            else{
+				alert('set photo as a default is failed, please try again.');
+				$('#ajax_waiting_photo').hide();
+            }               
+		}
+	);	
+};
+
 //function to delete photo 
 var fnDeletePhoto = function(photo_id){
 	$('#ajax_waiting_photo').show();
@@ -217,9 +261,17 @@ function dialogAlert($title, $msg, $fnAction){
         buttons: {
             OK: function() {
                 $fnAction();
+            },
+            CANCEL: function(){
+            	dialogBoxClose();
             }
         }
     });
+}
+
+function dialogBoxClose(){
+	$(this).dialog('close');
+    $('#dialogAlert').remove();	
 }
 
 function fnSubmitSave(){
@@ -262,6 +314,16 @@ function btnDeletePhoto_Click(photo_id){
 		fnDeletePhoto(photo_id);		
 	}
 }
+
+function btnPhotoMakeDefault_Click(photo_id){
+	if (confirm('are you sure to make this photo as default photo for this product?')){
+		fnPhotoMakeDefault(photo_id);		
+	}
+}
+
+function btnPhotoChangeStatus_Click(photo_id, is_active){
+	fnPhotoChangeStatus(photo_id, is_active);
+}
 //-->
 </script>
 
@@ -273,8 +335,11 @@ function btnDeletePhoto_Click(photo_id){
 	</ul>
 </div>
 <div class="tab_content" id="section_product_content">
-	<div><a href="<?=base_url().'admin/product/add'?>" class="product_new_link">new product</a></div>
-	<br /><br />
+	<div class="product_new_link"><a href="<?=base_url().'admin/product/add'?>" title="add new product">
+		    <img src="<?=base_url().'images/plus.png'?>" border="0" width="20" />
+		 </a></div>
+		 
+	<br /><br /><br />
 	<form name="frmAdminProduct" method="post" action="<?=base_url()?>admin/product/save">
 	  <input type="hidden" name="isNew" value="<?if ($isNew){ echo('true'); } else{ echo('false'); }?>">
 	  <input type="hidden" name="cmdAdminProduct" value="submit">
@@ -380,7 +445,8 @@ function btnDeletePhoto_Click(photo_id){
 	</ul>
 </div>
 <div class="tab_content" id="section_item_content">
-	<div><a href="javascript:btnAddItem_Click()" class="product_new_link">add item</a></div>
+	<div><a href="javascript:btnAddItem_Click()" class="product_new_link" title="add new item"><img src="<?=base_url().'images/plus.png'?>" border="0" width="20" /></a></div>
+
 	<br />
 	  <ul class="product_item_top">
 	  	 <li class="product_item_list"><b>Id</b></li>
@@ -405,7 +471,7 @@ function btnDeletePhoto_Click(photo_id){
 	</ul>
 </div>
 <div class="tab_content" id="section_photo_content">
-	<div><a href="javascript:btnAddPhoto_Click();" class="product_new_link">add photo</a></div>
+	<div><a href="javascript:btnAddPhoto_Click();" class="product_new_link" title="add new photo"><img src="<?=base_url().'images/plus.png'?>" border="0" width="20" /></a></div>
 	<br />
 	  <p id="photo_list" style="height: 100px">
 		<div id="ajax_waiting_photo" class="product_search_wait"><img src="<?=base_url().'images/ajax-loader.gif'?>" border="0" /></div>
@@ -436,6 +502,13 @@ function btnDeletePhoto_Click(photo_id){
 <div id="dialog_photo_new" style="display:none">
 	<iframe src="../photo_add/<?=$product_id?>" frameBorder="0"></iframe>
 </div>
+<div id="dialog_stock_adjust" style="display:none">
+	<div class="unit size1of4">adjustment type</div>
+	<div class="unit size1of4"></div>
+	<div class="unit size1of4">by</div>
+	<div class="unit size1of4"></div>
+</div>
+
 
 <br /><br /><br /><br /><br /><br /><br /><br />
 <br /><br /><br /><br /><br /><br /><br /><br />

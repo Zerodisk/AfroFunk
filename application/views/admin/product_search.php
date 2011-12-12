@@ -168,7 +168,7 @@ function dialogAlert($msg)
 <div class="tab_content">
 	<form name="frmProductSearch" method="post" action="">
 		<br />
-		<div><a href="product/add" class="product_new_link">new product</a></div>
+		<div><a href="product/add" class="product_new_link" title="add new product">new product<img src="<?=base_url().'images/plus.png'?>" border="0" width="20" /></a>&nbsp;&nbsp;&nbsp;</div>
 		<br />
 		  <p>
 			<span>keyword:&nbsp;&nbsp;&nbsp;&nbsp;</span>

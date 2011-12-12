@@ -212,12 +212,21 @@ class Product extends MY_Controller{
     	$this->echoJson(TRUE, NULL);
     }
     
-    public function ajax_updatePhoto(){
+    public function ajax_photoSetMain(){
     	$photo_id = $this->input->get_post('photo_id');
-    	$is_main = $this->input->get_post('is_main');
+    	
+    	$param = array('is_main' => 1);
+    	$this->PhotoModel->updatePhoto($photo_id, $param);
+    	$this->echoJson(TRUE, NULL);
+    }
+    
+    public function ajax_photoChangeStatus(){
+    	$photo_id = $this->input->get_post('photo_id');
     	$is_active = $this->input->get_post('is_active');
-    	
-    	
+    	 
+    	$param = array('is_active' => $is_active);
+    	$this->PhotoModel->updatePhoto($photo_id, $param);
+    	$this->echoJson(TRUE, NULL);
     }
     
     
