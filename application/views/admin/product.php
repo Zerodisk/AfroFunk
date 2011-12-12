@@ -504,7 +504,11 @@ function btnPhotoChangeStatus_Click(photo_id, is_active){
 </div>
 <div id="dialog_stock_adjust" style="display:none">
 	<div class="unit size1of4">adjustment type</div>
-	<div class="unit size1of4"></div>
+	<div class="unit size1of4">
+		<select id="#ddTransacType#">
+			<option value=""></option>
+		</select>
+	</div>
 	<div class="unit size1of4">by</div>
 	<div class="unit size1of4"></div>
 </div>
