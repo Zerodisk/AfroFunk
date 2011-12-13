@@ -94,6 +94,24 @@ class ItemModel extends CI_Model{
     	$this::updateItem($item_id, $param);
     }
     
+    //function for updateing item.qty and transaction table by a given transac_type and quantity
+    public function updateStock($item_id, $transac_type, $qty){
+    	if ($qty <= 0)
+    		return 0;		//can't update with negative/zero qty before apply transac type value
+    	
+	    //get transac value positive or negative (+1/-1)
+	    $transac_value = $this->TransactionModel->getTransactionTypeValue($transac_type);
+	    if ($transac_value == 0)	
+	    	return 0;		//fail, transaction type not matched!!
+	    
+	    //add new transaction
+	    $this->TransactionModel->addNewTransaction($item_id, $transac_type, ($qty * $transac_value));
+	    //get current quantity available
+	    $current_qty = $this->TransactionModel->getSummaryQtyByItem($item_id);
+	    //update to item table
+	    $this::updateItem($item_id, array('qty' => $current_qty));
+	    return true;
+    }   
     
     
     

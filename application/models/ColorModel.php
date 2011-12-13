@@ -10,7 +10,7 @@ class ColorModel extends CI_Model{
     
     //function return all color list
     function getColorList(){
-        $sql = 'select * from color order by weight';
+        $sql = 'select * from color order by color_name';
         $query = $this->db->query($sql);
         $data = $query->result_array();
         

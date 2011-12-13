@@ -85,7 +85,7 @@ class MY_Controller extends CI_Controller{
     	if ($result->status)
     		$result->data = $object;
     	
-    	sleep(1);
+    	sleep(0.7);
     	echo(json_encode($result));
     }
     

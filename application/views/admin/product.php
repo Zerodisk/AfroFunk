@@ -38,7 +38,9 @@ var returnItemList = function(item){
 	var size   = li_start + item.size_name  + '</li>';
 	var qty    = li_start + item.qty        + '</li>';
 	var status = li_start + statusText      + '</li>';
-	var option = li_start + '<a href="javascript:btnEditItem_Click(' + item.item_id + ', ' + item.size_id + ', ' + item.color_id + ', ' + item.is_active + ')">edit</a></li>';
+	var option = li_start + '<a href="javascript:btnEditItem_Click(' + item.item_id + ', ' + item.size_id + ', ' + item.color_id + ', ' + item.is_active + ')">edit</a>&nbsp;|&nbsp;'
+						  + '<a href="javascript:btnEditStock_Click(' + item.item_id + ')">stock</a>'
+	  					  + '</li>';
 	
 	return '<ul class="product_item_top">'
 			 + id + color + size + qty + status + option;
@@ -46,7 +48,7 @@ var returnItemList = function(item){
 };
 
 var returnPhotoList = function(photo){
-	var img = '<img src="<?=base_url().'images/products/'?>' + photo.photo_filename + '" width="150" style="float:left" />';
+	var img = '<img src="<?=$product_photos_folder?>/' + photo.photo_filename + '" width="150" style="float:left" />';
 	var del = '<a href="javascript:void();" class="grey-button pcb" id="linkSave" onclick="btnDeletePhoto_Click(' + photo.photo_id + ');"><span>Delete</span></a>';
 	var is_active = '';
 	var is_main = '';
@@ -78,6 +80,29 @@ var fnAddPhoto = function(){
 
     $('#ajax_waiting_photo').show();
     fnLoadPhotoList($product_id);	
+};
+
+var fnStockItem = function(){
+	var item_id      = $item_id;
+	var transac_type = $('#transac_type').val();
+	var transac_qty  = $('#transac_qty').val();
+
+	$('#ajax_waiting_item').show();
+	
+	$.getJSON('<?=base_url()?>admin/product/ajax_stockUpdate', { 'item_id' : item_id, 'transac_type': transac_type, 'transac_qty': transac_qty }, 
+		function(json){
+	        if (json.status){
+				//edit success
+				fnLoadItemList($product_id);					
+				dialogBoxClose();;		                
+	        }	   
+	        else{
+				//stock adjustment is failed !!!
+				alert('adjust stock failed, please try again');
+	        }             	  	          
+		}
+	);	
+	
 };
 
 //function for editing an existing item
@@ -294,13 +319,24 @@ function btnEditItem_Click(item_id, size_id, color_id, is_active){
 	html = html.replace('#size_id_edit#', 'size_id_edit');
 	html = html.replace('#chkIsActive_edit#', 'chkIsActive_edit');
 
-	dialogAlert('edit item', html, fnEditItem);
+	dialogAlert('edit item for ID: ' + item_id, html, fnEditItem);
 
 	//select the existing value (color, size);
 	$('#size_id_edit').val(size_id);	
 	$('#color_id_edit').val(color_id);
 	if (is_active == 1)
 		$('#chkIsActive_edit').attr('checked', true);
+}
+
+function btnEditStock_Click(item_id){
+	var html = $('#dialog_stock_adjust').html();
+	$item_id = item_id;
+	html = html.replace('#transac_type#', 'transac_type');
+	html = html.replace('#transac_qty#', 'transac_qty');
+
+	dialogAlert('update stock for ID: ' + item_id, html, fnStockItem);
+
+	
 }
 
 function btnAddPhoto_Click(){
@@ -503,14 +539,14 @@ function btnPhotoChangeStatus_Click(photo_id, is_active){
 	<iframe src="../photo_add/<?=$product_id?>" frameBorder="0"></iframe>
 </div>
 <div id="dialog_stock_adjust" style="display:none">
-	<div class="unit size1of4">adjustment type</div>
-	<div class="unit size1of4">
-		<select id="#ddTransacType#">
-			<option value=""></option>
-		</select>
+	<div>
+		<div class="unit size1of3">adjustment type</div>
+		<div class="unit size2of3"><?=form_dropdown('', $transac_options, '', 'id="#transac_type#"')?></div>
 	</div>
-	<div class="unit size1of4">by</div>
-	<div class="unit size1of4"></div>
+	<div>
+		<div class="unit size1of3">by</div>
+		<div class="unit size2of3"><input type="text" id="#transac_qty#"  value="" size="3" maxlength="3" /></div>
+	</div>
 </div>
 
 
@@ -523,3 +559,5 @@ function btnPhotoChangeStatus_Click(photo_id, is_active){
 <?if (isset($sizes_options)) {var_dump($sizes_options);} ?>
 <br /><br />
 <?if (isset($categories_options)) {var_dump($categories_options);} ?>
+<br /><br />
+<?if (isset($transac_options)) {var_dump($transac_options);} ?>

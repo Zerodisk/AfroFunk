@@ -176,6 +176,12 @@ class Test extends MY_Controller{
     	}
     }
     
+    public function getPhotoFolder(){
+    	echo $this->PhotoModel->getLocalFolder();
+    	echo "<br>";
+    	echo $this->PhotoModel->getUrlPath();
+    }
+    
     public function transac_new(){
     	$this->TransactionModel->transacNew(123, 4);
     }

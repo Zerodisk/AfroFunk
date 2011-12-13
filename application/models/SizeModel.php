@@ -10,7 +10,7 @@ class SizeModel extends CI_Model{
     
     //function retuen all size list
     function getSizeList(){
-        $sql = 'select * from size order by weight';
+        $sql = 'select * from size order by size_name';
         $query = $this->db->query($sql);
         $data = $query->result_array();
         

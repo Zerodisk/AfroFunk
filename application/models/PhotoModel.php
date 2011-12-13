@@ -11,6 +11,10 @@ class PhotoModel extends CI_Model{
     	$this->load->helper('path');
     	return set_realpath('images/products');
     }
+    
+    function getUrlPath(){
+    	return base_url().'images/products';
+    }
 
     //function return list of photo by a given product_id
     function getPhotoListByProductId($product_id, $active_only = TRUE){
@@ -125,7 +129,12 @@ class PhotoModel extends CI_Model{
 	    	$this->db->delete('photo', array('photo_id' => $id));
 	    	
 	    	//delete file
-	    	unlink($this::getLocalFolder().$filename);
+	    	try{
+	    		unlink($this::getLocalFolder().$filename);
+	    	}
+	    	catch(Exception $e){
+	    		//delete failed (could be file is not found or no permission)
+	    	}
 
 	    	return TRUE;
     	}

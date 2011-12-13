@@ -11,6 +11,10 @@ class CategoryPhotoModel extends CI_Model{
     	return set_realpath('images/categories');
     }
     
+    function getUrlPath(){
+    	return base_url().'images/categories';
+    }
+    
     //function return all photo category slice by a given category_id
     function getPhotosByCategoryId($category_id, $active_only = TRUE){
         $sql_extra = '';

@@ -11,6 +11,7 @@ class Product extends MY_Controller{
         $this->load->model('PhotoModel');
         $this->load->model('SizeModel');
         $this->load->model('ColorModel');
+        $this->load->model('TransactionModel');
         
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
@@ -176,6 +177,9 @@ class Product extends MY_Controller{
     	$size_id    = $this->input->get_post('size_id');
     	$color_id   = $this->input->get_post('color_id');
     	
+    	if (!is_numeric($qty))
+    		$this->echoJson(FALSE, NULL);    //qty is NOT numeric number
+    	
     	$param = array();
     	if ($size_id > 0)
     		$param['size_id']  = $size_id;
@@ -229,6 +233,20 @@ class Product extends MY_Controller{
     	$this->echoJson(TRUE, NULL);
     }
     
+    public function ajax_stockUpdate(){
+    	$item_id       = $this->input->get_post('item_id');
+    	$transac_type  = $this->input->get_post('transac_type');
+    	$transac_qty   = $this->input->get_post('transac_qty');
+    	
+    	if (!is_numeric($transac_qty))
+    		$this->echoJson(FALSE, NULL);    //qty is NOT numeric number
+    	
+    	if ($this->ItemModel->updateStock($item_id, $transac_type, $transac_qty))
+    		$this->echoJson(TRUE, NULL);
+    	else
+    		$this->echoJson(FALSE, NULL);
+    }
+    
     
     
 	// ************************** private function ************************ //
@@ -258,7 +276,10 @@ class Product extends MY_Controller{
 							'sizes_options'			=> $this->SizeModel->getSizeDropdown(-1, 'select size'),				//for size drop down option
 							'colors_options'		=> $this->ColorModel->getColorDropdown(-1, 'select color'),				//for color drop down option
 							'categories_options'   	=> $this->CategoryModel->getCategoryDropdown(-1, 'select category'),	//for category drop down options
-							'category_id_selected'  => $category_id_selected,			
+							'category_id_selected'  => $category_id_selected,	
+							'transac_options'		=> $this->TransactionModel->getTransactionTypeDropdownSimple('', 'select transaction type'),
+							'transac_selected'		=> 'PIN',
+							'product_photos_folder'	=> $this->PhotoModel->getUrlPath(),		
 		);
     	
     	//load page name
