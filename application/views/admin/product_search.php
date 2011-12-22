@@ -35,10 +35,10 @@ function showItemList(product_id){
 	            $(targetTag).append('</div>');
             }
             else{
-            	dialogAlert('no items found');
-              	$('#linkShowItem_' + product_id).hide();
-            }	
-            $('#ajax_waiting_item_' + product_id).show();	                	  
+            	$('#ajax_waiting_item_' + product_id).hide();
+            	$('#linkShowItem_' + product_id).hide();
+            	dialogAlert('no items found');              	              	
+            }	              	  
 		}
 	);	
 }
@@ -52,8 +52,12 @@ function returnSearchResultItem(product){
 	var name     = li_start + '<a href="product/view/' + product.product_id + '">' + product.product_name + '</a></li>';
 	var price    = li_start + '$' + product.price + '</li>';
 	var qty      = li_start + product.qty + '</li>';
-	var options  = li_start + '<a href="javascript:showItemList(' + product.product_id + ')" id="linkShowItem_' + product.product_id + '">show items</a></li>';
-
+	var options  = li_start + 'no stock items</li>';
+	
+	if (product.num_items > 0){
+		options  = li_start + '<a href="javascript:showItemList(' + product.product_id + ')" id="linkShowItem_' + product.product_id + '">show items</a></li>';
+	}
+	
 	var space    = li_start + '&nbsp;</li>';
 	var items    = li_start + '<div id="item_' + product.product_id + '">' + wait + '</div></li>';
 	

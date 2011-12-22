@@ -238,8 +238,10 @@ class Product extends MY_Controller{
     	$transac_type  = $this->input->get_post('transac_type');
     	$transac_qty   = $this->input->get_post('transac_qty');
     	
-    	if (!is_numeric($transac_qty))
+    	if (!is_numeric($transac_qty)){
     		$this->echoJson(FALSE, NULL);    //qty is NOT numeric number
+    		return;
+    	}
     	
     	if ($this->ItemModel->updateStock($item_id, $transac_type, $transac_qty))
     		$this->echoJson(TRUE, NULL);

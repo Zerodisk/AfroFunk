@@ -50,20 +50,6 @@ class TransactionModel extends CI_Model{
     	return $options;
     }
     
-    function getTransactionTypeValue($transaction_type){
-    	$sql = 'select value from transaction_mapping where transaction_type = ?';
-    	$query = $this->db->query($sql, array($transaction_type));
-    	$value = 0;
-    	 
-    	if ($query->num_rows() > 0){
-    		$row = $query->row_array();
-    		$value = $row['value'];
-    	}
-    
-    	$query->free_result();
-    	return $value;
-    }
-    
     function addNewTransaction($item_id, $transac_type, $qty, $order_id = NULL){
     	$param = array(
     					'item_id' 			=> $item_id,
@@ -75,6 +61,19 @@ class TransactionModel extends CI_Model{
     	$this->db->insert('transaction', $param);
     }
     
-
+    
+    private function getTransactionTypeValue($transaction_type){
+	    $sql = 'select value from transaction_mapping where transaction_type = ?';
+	    $query = $this->db->query($sql, array($transaction_type));
+	    $value = 0;
+	    
+	    if ($query->num_rows() > 0){
+	    	$row = $query->row_array();
+	    	$value = $row['value'];
+	    }
+	    
+	    $query->free_result();
+	    return $value;
+    }
     
 }

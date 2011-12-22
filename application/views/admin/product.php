@@ -87,6 +87,11 @@ var fnStockItem = function(){
 	var transac_type = $('#transac_type').val();
 	var transac_qty  = $('#transac_qty').val();
 
+	if (transac_qty == ''){
+		alert('please enter the quantity');
+		return;
+	}
+
 	$('#ajax_waiting_item').show();
 	
 	$.getJSON('<?=base_url()?>admin/product/ajax_stockUpdate', { 'item_id' : item_id, 'transac_type': transac_type, 'transac_qty': transac_qty }, 
@@ -138,6 +143,12 @@ var fnAddNewItem = function(){
 	var qty        = $('#qty_new').val();
 	var size_id    = $('#size_id_new').val();
 	var color_id   = $('#color_id_new').val();
+
+	if (qty == ''){ 
+			alert('please enter quantity'); 
+			return;
+	}
+	
 	$('#ajax_waiting_item').show();
 	
 	$.getJSON('<?=base_url()?>admin/product/ajax_addNewItem', { 'product_id' : product_id, 'qty': qty, 'size_id': size_id, 'color_id': color_id }, 
@@ -280,8 +291,8 @@ function dialogAlert($title, $msg, $fnAction){
     $('body').append('<div id="dialogAlert" style="display:none" title="' + $title + '">' + $msg + '</div>');
     $('#dialogAlert').dialog({
         modal: true,
-        width: 600,
-        draggable: false,
+        width: 650,
+        draggable: true,
         resizable: false,
         buttons: {
             OK: function() {
