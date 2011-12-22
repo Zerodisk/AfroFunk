@@ -1,0 +1,110 @@
+/* v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* ----------------------------------------------------
+-------------------------------------------------------
+ RESET CSS FRAMEWORK OF GUILHERME SALUM - DDSTUDIOS
+-------------------------------------------------------
+---------------------------------------------------- */
+
+p, ul, ol, blockquote { margin: .5em 0 1.2em 0; }
+
+a:link, a:visited, a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+ul { list-style: circle; padding-left: 40px; }
+ol { list-style: decimal; padding-left: 40px; }
+
+.alignleft, .left { float: left; }
+.alignright, .right { float: right; }
+img.alignleft { float: left; margin: 0 1ex 1ex 0; }
+img.alignright { float: right; margin: 0 0 1ex 1ex; }
+
+blockquote { display: block; padding: 10px 10px 10px 20px; border-left: 4px solid #d4d4d4; }
+
+.one-half, .one-third, .two-thirds,
+.one-fourth, .three-fourths, .one-fifth,
+.two-fifths, .three-fifths, .four-fifths,
+.one-sixth, .five-sixths, .one-seventh,
+.two-sevenths, .three-sevenths, .four-sevenths,
+.five-sevenths, .six-sevenths { float: left; margin: 0 4% 0 0; }
+.one { width: 920px !important; float: left; margin-bottom: 30px; }
+.one-half { width: 48%; }
+.one-third { width: 30.66%; }
+.two-thirds { width: 65.33%; }
+.one-fourth { width: 22%; }
+.three-fourths { width: 74%; }
+.one-fifth { width: 16.8%; }
+.two-fifths { width: 37.6%; }
+.three-fifths { width: 58.4%; }
+.four-fifths { width: 79.2%; }
+.one-sixth { width: 13.33%; }
+.five-sixths { width: 82.67%; }
+.one-seventh { width: 10.857%; }
+.two-sevenths { width: 25.714%; }
+.three-sevenths { width: 40.571%; }
+.four-sevenths { width: 55.428%; }
+.five-sevenths { width: 70.285%; }
+.six-sevenths { width: 85.142%; }
+.group { float: left; width: 100%; }
+.block { float: left; width: 100%; margin-bottom: 30px; }
+.last { margin-right: 0 !important; }
+
+.wrapper { width: 960px; margin: 0 auto; position: relative; }
+
+.padding-10 { float: left; width: 100%; height: 10px; }
+.padding-20 { float: left; width: 100%; height: 20px; }
+.padding-30 { float: left; width: 100%; height: 30px; }
+.padding-40 { float: left; width: 100%; height: 40px; }
+
+small { font-size: 11px; }

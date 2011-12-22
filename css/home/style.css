@@ -1,0 +1,399 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+/* reset all elements */
+@import url("reset.css");
+
+
+/* === GENERAL STYLES === */
+
+body {
+	
+	font: normal 12px/20px Helvetica, Arial, sans-serif;
+	
+}
+
+a {  text-decoration: underline; }
+
+h1, h2, h3, h4, h5, h6 {
+	
+	font-style: bold;
+	margin-bottom: 1em;
+	
+}
+
+p { margin-bottom: 1.7em; }
+
+h4, h5, h6 { margin-bottom: 5px; margin-top: .5em; }
+
+h1 { font-size: 200%; }
+h2 { font-size: 160%; }
+h3 { font-size: 140%; }
+h4 { font-size: 120%; }
+h5 { font-size: 110%; }
+h6 { font-size: 100%; }
+
+.clear { clear: both; }
+
+.read-more { text-decoration: underline !important; }
+
+.divider-top { float: left; width: 100%; height: 1px; margin: 0 0 50px 0; position: relative; }
+.divider-top a { position: absolute; right: 0; top: -9px; font: bold 11px/18px Helvetica, Arial, sans-serif; padding-left: 8px; }
+
+.heading-divider-10 { float: left; width: 100%; height: 1px; margin: 0 0 7px 0; }
+.heading-divider-15 { float: left; width: 100%; height: 1px; margin: 5px 0 12px 0; }
+.heading-divider-20 { float: left; width: 100%; height: 1px; margin: 10px 0 17px 0; }
+.heading-divider-30 { float: left; width: 100%; height: 1px; margin: 20px 0 27px 0; }
+.heading-divider-40 { float: left; width: 100%; height: 1px; margin: 30px 0 37px 0; }
+
+	
+	/* == FORMS == */
+	input, textarea, select {
+		
+		font: normal 11px/18px Helvetica, Arial, sans-serif;
+		padding: 5px 6px 4px 6px;
+		width: 95%;
+		margin-bottom: .3em;
+		
+		border-radius: 3px;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		
+	}
+	
+	.medium { width: 70%; }
+	.short { width: 40%; }
+	
+		
+	label { display: block; font: bold 12px/18px Helvetica, Arial, sans-serif; cursor: pointer; }
+	label span { color: #cd2c2c; }
+	label em { font: italic 9px/15px helvetica, Arial, sans-serif; }
+	
+	.button, input[type=submit] { width: auto; padding: 7px 15px 5px 15px; font: bold 11px/18px Helvetica, Arial, sans-serif; cursor: pointer; }
+
+
+
+
+/* === HEADER === */
+
+#header {
+	
+	float: left;
+	margin-bottom: 50px;
+	padding: 30px 0 0 0;
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	
+}
+
+	/* logo */
+	#logo {
+		
+		float: left;
+		margin: -30px 30px 0 0;
+		padding: 30px 30px 30px 0;
+		
+	}
+	
+	/* menu */
+	#menu {
+		
+		float: left;
+		
+	}
+	
+		#menu ul { float: left; list-style: none; padding: 0; margin: 0; width: 100px; }
+		
+		#menu ul li { float: left; width: 100%; position: relative; }
+		
+			#menu ul li a {
+				
+				display: block;
+				float: left;
+				font: bold 13px/21px Helvetica, Arial, sans-serif;
+				width: 100%;
+				
+			}
+		
+			#menu ul li a:hover, #menu ul li.current-menu-item a { text-decoration: none; }
+			
+			#menu ul li ul {
+				
+				display: none;
+				padding: 10px;
+				position: absolute;
+				top: -10px; left: 100px;
+				
+			}
+			
+	/* header-right */
+	#header-right {
+		
+		float: right;
+		
+	}
+		
+		/* search form */
+		#s-top { position: relative; float: left; width: 180px; padding: 0; margin-bottom: 15px; }
+		
+			#s-top #searchInput { float: left; width: 147px; padding: 5px 25px 4px 6px; line-height: 1em; margin-bottom: 0; }
+			
+			#s-top #searchButton {
+				
+				border: none;
+				cursor: pointer;
+				float: left;
+				height: 24px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 24px;
+				
+			}
+			
+		
+		/* social media - top */
+		#socialTop { float: right; list-style: none; padding: 0; margin: 0; }
+		
+			#socialTop li { float: left; margin: 0 0 0 5px; }
+			
+	
+	
+	
+	/* ==== CONTENT ==== */
+	#content { float: left; width: 100%; }
+	
+		.block { float: left; width: 100%; margin-bottom: 50px; }
+		
+		
+		
+		/* slider */
+		
+		#slider-wrapper { position: relative; }
+		
+			#slider-selector { list-style: none; margin: 0; padding: 0; position: absolute; right: 10px; bottom: 10px; z-index: 100; }
+			
+				#slider-selector li { width: 13px; height: 13px; float: left; cursor: pointer; }
+				
+			#slide-left, #slide-right { position: absolute; top: 0; width: 200px; height: 100%; z-index: 90; cursor: pointer; }
+			
+			
+			
+		/* breadcrumb */
+		
+		#breadcrumb { float: left; width: 100%; margin-bottom: 60px; text-transform: uppercase; font: normal 9px/20px Helvetica, Arial, sans-serif; }
+		
+			#breadcrumb .init, #breadcrumb .separator { margin-right: 10px; }
+			#breadcrumb .list a, #breadcrumb .list span { margin-right: 7px; }
+			
+			
+			
+		/* sidebar */
+		#sidebar { width: 280px; margin: 30px 0 50px 0; }
+		.sidebar-right { margin-left: 50px !important; float: right; }
+		.sidebar-left { margin-right: 50px !important; float: left; }
+		
+		.sidebar-block { float: left; width: 100%; margin-bottom: 30px; }
+		
+			.menu-list li a { font-weight: bold; }
+		
+			#sidebar ul, #footer ul, ul.links { margin: 0; padding: 0; list-style: none; }
+			.sidebar-block > ul > li > a, .footer-sidebar-block > ul > li > a, ul.links li a { font-weight: bold; }
+			.sidebar-block > ul > li > a:hover, .footer-sidebar-block > ul > li > a:hover, ul.links li a:hover { text-decoration: none; }
+			
+				/* testimonials */
+				#sidebar .testimonials li { float: left; width: 100%; font: normal 11px/15px Helvetica, Arial, sans-serif; margin-bottom: 20px; }
+				#sidebar .testimonials li span { display: block; font-weight: bold; margin-top: 3px; font-size: 12px; }		
+				#sidebar .testimonials li img { float: left; margin-right: 12px; }	
+
+		
+		/* main content */
+		#main-content { float: left; width: 630px; margin-bottom: 50px; }
+		#main-content-full { float: left; width: 100%; margin-bottom: 50px; }
+		
+			#main-content .divider-top { margin: 10px 0 35px 0; }
+			
+			/* wp-caption */
+			.wp-caption { background: none; text-align: left; padding: 0; border: none; margin: 5px 0 0 0; }
+			.wp-caption-text { font: bold 13px/19px Helvetica, Arial, sans-serif; margin: 10px 0 0 0; }
+			
+			.alignleft { margin-right: 15px; }
+			.alignright { margin-left: 15px; }
+			
+			
+			
+		/* blog posts */
+		.post { float: left; width: 100%; margin: 30px 0 30px 0; position: relative; }
+		
+			.post-info { text-align: right; }
+			.post-content { float: right; }
+			.post-content-full .post-content { float: left; width: 100%; }
+			
+			.post-title { margin-bottom: .65em; }
+			h1.post-title { font-size: 110%; margin-top: .5em; }
+			.post-author { display: block; }
+			.post-date { display: block; }
+			.post-cats { display: block; }
+			
+			.post-info-divider { width: 10px; height: 1px; margin: 12px 2px 12px 0; }
+			
+			.post-author { line-height: 20px; }
+			
+			.post-tags, .post-tags a { font-style: italic; }
+			
+			
+			.post-img-divider { float: left; width: 40px; height: 1px; overflow: hidden; margin: 25px 0 15px 0; }
+			
+			
+			
+				/* share */
+				
+				.post-content-full .share-this { position: absolute; left: -55px; top: -4px; }
+				.share-this { float: right; margin: 10px 0 30px 0; position: relative; }
+					
+					.share-this .open { font-size: 10px; text-transform: uppercase; cursor: pointer; }
+					.share-this .arrow { display: block; width: 100%; height: 4px;  position: absolute; bottom: -10px; left: 0; cursor: pointer; cursor: pointer; }
+					.share-this .arrow-close { border-top: none !important; }
+					
+					.share-this ul { margin: 10px 0; padding: 0; list-style: none; display: none; }
+					.share-this ul li { text-align: center; margin: 5px 0; }
+			
+			
+			
+			/* /.pagination/ */
+			.pagination { float: left; width: 100%; margin-bottom: 20px; }
+			
+				.pagination ul { float: left; padding: 0; margin: -20px 0 0 0; list-style: none; }
+				.pagination ul li { float: left; }
+				.pagination ul li a { padding: 7px; font: bold 13px/18px Helvetica, Arial, sans-serif; }
+			
+			
+		
+		/* Other styles */
+		#page-title { float: left; margin: -60px 0 35px 0; padding: 25px 10px 0 0; font-size: 28px; }
+		
+		
+		
+		
+	/* === COMMENTS === */
+	
+	#comments {  }
+	
+		#comments ol { margin: 0; padding: 0; list-style: none; margin: 30px 0 0 0; }
+		
+			#comments ol li { display: block; margin: 0 0 30px 0; }
+			
+			#comments .comment-info { width: 145px; text-align: right; float: left; margin: 10px 20px 10px 0; }
+			#comments .reply a { display: block; font: normal 10px/16px Helvetica, Arial, sans-serif; color: #999; text-transform: uppercase; }
+			#comments .author { display: block; }
+			#comments .author, #comments .author a { font: bold 13px/22px Helvetica, Arial, sans-serif; font-weight: bold; margin-top: 7px; }
+			
+			#comments .comment-content { margin-left: 165px; padding: 1px 0 1px 10px; }
+			#comments p { margin: 1em 0; }
+			#comments .time-date { font: italic 10px/16px Helvetica, Arial, sans-serif; }
+			
+				#comments ol li ul { margin: 30px 0 0 45px; padding: 0; }
+				
+				
+			#commentform { margin-top: 30px; }
+			
+			.post-content-full #comments .comment-info { text-align: right; width: 70px; }
+			.post-content-full #comments .comment-content { margin-left: 90px; }
+			
+			
+			
+			
+	/* === PORTFOLIO === */
+	
+	#portfolio-grid { margin: 0; padding: 0; list-style: none; }
+	
+		.halves li { float: left; width: 475px; margin-right: 10px; }
+		.thirds li { float: left; width: 313px; margin-right: 10px; }
+		.fourths li { float: left; width: 232px; margin-right: 10px; }
+		.fifths li { float: left; width: 184px; margin-right: 10px; }
+	
+		.portfolio-item { margin: 0 0 10px 0; }
+		
+		.portfolio-item .image { margin-bottom: 10px; padding: 10px; float: left; }
+		.portfolio-item .color { display: none; }
+		.portfolio-item .image a { position: relative; padding: 0; margin: 0; float: left; }
+		.portfolio-item .image img { display: block; }
+		
+		.portfolio-item .image a span {  position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: none; }
+		.portfolio-item .image .image span span { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		.portfolio-item .image .video span span { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		
+		.portfolio-item .portfolio-info { padding: 0 10px 1px 10px; }
+		
+	#portfolio-sidebar-left { margin: 15px 20px 0 0; }
+	#portfolio-sidebar-right { margin: 15px 0 0 10px; }
+	
+		.portfolio-sidebar > ul { margin: 0; padding: 0; list-style: none; }
+		.portfolio-sidebar > ul > li { width: auto; margin: 0; float: none; }
+		.portfolio-sidebar > ul > li a { font-weight: bold; color: #666; display: block; }
+		
+		.portfolio-sidebar-block { margin-bottom: 30px; float: left; width: 100%; }
+		
+	#portfolio-divider { margin: 30px 0 30px 0; }
+		
+		
+		
+		
+	/* ==== FOOTER ==== */
+	
+	.menu { list-style: none; float: left; width: 100%; margin: 0; padding: 0;}
+	
+		.menu li { float: left; width: 100%; }
+		.menu li a { font: bold 12px/25px Helvetica, Arial, sans-serif; }
+		
+	
+	
+	/* flickr */
+	.flickr-grid { list-style: none; float: left; width: 100%; padding: 0; margin: 0; }
+	.flickr-grid li { float: left !important; margin: 5px !important; width: auto !important; }
+	.flickr-grid img { display: block; }
+	
+	
+	/* twitter-feed */
+	.twitter-feed { float: left; width: 100%; margin: 0; padding: 0; list-style: none; }
+	.twitter-feed li { margin-bottom: 15px; display: block; padding-left: 40px; }
+	.twitter-feed span { font: italic 11/18px Helvetica, Arial, sans-serif; display: block; }
+	
+	
+	
+	
+	/* ==== COPYRIGHT ==== */
+	#copyright { float: left; width: 100%; margin: -10px 0 0 0; padding-bottom: 40px; }
+	
+	table {
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+table th {
+	
+	padding: 5px 13px 5px 13px;
+	font-size: 14px;
+}
+
+table td {
+	padding: 5px;
+	padding-left:13px;
+}
+
+table td:hover {
+}
+
+#calendar_wrap table td {
+	
+	text-align: center;
+	padding-left:3px;
+	
+}
+.sticky {  }
+.bypostauthor {  }
+.gallery-caption {  }
+.aligncenter { text-align: center; }

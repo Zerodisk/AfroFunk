@@ -6,12 +6,6 @@ class Home extends MY_Controller{
         
         //load models
         $this->load->model('CategoryModel');
-        
-        //load header+footer+title
-        $data['header'] = $this::_getHeader();
-        $data['footer'] = $this::_getFooter();
-        $data['title']  = $this::_getTitle();
-        $this->load->vars($data);
     }
 
     //main landing page
@@ -19,41 +13,12 @@ class Home extends MY_Controller{
         $categories = $this->CategoryModel->getCategoryList();
         
         //load all neccesary main data
-        $data['main'] = array(
-        					'categories' => $categories,
-        				);
-        
-        //load page name
-        $data['page'] = 'home';
+        $data = array(
+        			   'categories' => $categories,
+        			 );
 
         //load page template
-        $this->load->view('template', $data);
+        $this->load->view('home', $data);
     } 
-    
-    
-    
-    /***********************************
-     *
-     * private function for
-     * - header
-     * - footer
-     * - title
-     * 
-     ***********************************/
-    private function _getHeader(){
-        return array(
-                    'first'  => '1. first',
-                    'second' => '2. second'
-                    );
-    }
-    
-    private function _getFooter(){
-        return array(
-                    'third'  => 'footer on home page',
-                    );        
-    }
-    
-    private function _getTitle(){
-        return null;
-    }  
+     
 }
